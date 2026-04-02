@@ -10,6 +10,8 @@ use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SumberDanaController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\Kepsek\KepsekBarangController;
+use App\Http\Controllers\Kepsek\KepsekMutasiController;
 // --------------------------------------------------------
 // RUTE DASAR & AUTENTIKASI
 // --------------------------------------------------------
@@ -59,10 +61,19 @@ Route::middleware('auth')->group(function () {
     // 2. GRUP KHUSUS KEPALA SEKOLAH
     // ========================================================
     Route::middleware('role:Kepsek')->prefix('kepsek')->group(function () {
-        
-        // Dashboard Kepala Sekolah (Task 7)
+
+        // Dashboard Kepala Sekolah
         Route::get('/dashboard', [DashboardController::class, 'kepsek'])->name('kepsek.dashboard');
 
+        // Data Barang (read-only)
+        Route::get('/barang', [KepsekBarangController::class, 'index'])->name('kepsek.barang.index');
+
+        // Riwayat Mutasi (read-only)
+        Route::get('/mutasi', [KepsekMutasiController::class, 'index'])->name('kepsek.mutasi.index');
+
+        // Cetak Label (sama dengan admin)
+        Route::get('/barang/{id}/label', [LaporanController::class, 'printLabel'])->name('kepsek.barang.label');
+        Route::post('/barang/label/batch', [LaporanController::class, 'printLabelBatch'])->name('kepsek.barang.label.batch');
     });
 
 

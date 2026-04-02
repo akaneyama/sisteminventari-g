@@ -54,7 +54,7 @@ class DashboardController extends Controller
 
         // ── Chart: Mutasi 6 Bulan Terakhir ────────────────────────────────
         $mutasiTrend = Mutasi::select(
-                DB::raw("strftime('%Y-%m', tanggal_mutasi) as bulan"),
+                DB::raw("DATE_FORMAT(tanggal_mutasi, '%Y-%m') as bulan"),
                 DB::raw('count(*) as total')
             )
             ->where('tanggal_mutasi', '>=', now()->subMonths(5)->startOfMonth())
