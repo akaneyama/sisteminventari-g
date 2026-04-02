@@ -40,4 +40,65 @@
     </div>
 
 </div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <h3 class="text-gray-800 font-semibold mb-4">Grafik Kategori Barang</h3>
+        <canvas id="kategoriChart"></canvas>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <h3 class="text-gray-800 font-semibold mb-4">Grafik Kondisi Barang</h3>
+        <canvas id="kondisiChart"></canvas>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Tunggu sampai window.Chart tersedia jika app.js di-load secara defer
+    setTimeout(() => {
+        if (!window.Chart) return;
+        
+        // Pie Chart Kategori
+        const kategoriCtx = document.getElementById('kategoriChart').getContext('2d');
+        const kategoriData = @json($kategoriData);
+        new window.Chart(kategoriCtx, {
+            type: 'pie',
+            data: {
+                labels: kategoriData.map(item => item.nama_kategori),
+                datasets: [{
+                    label: 'Jumlah Barang per Kategori',
+                    data: kategoriData.map(item => item.total),
+                    backgroundColor: [
+                        '#3b82f6', '#10b981', '#f43f5e', '#f59e0b', '#8b5cf6', '#06b6d4', '#ec4899'
+                    ],
+                }]
+            }
+        });
+
+        // Bar Chart Kondisi
+        const kondisiCtx = document.getElementById('kondisiChart').getContext('2d');
+        const kondisiData = @json($kondisiData);
+        new window.Chart(kondisiCtx, {
+            type: 'bar',
+            data: {
+                labels: kondisiData.map(item => item.kondisi),
+                datasets: [{
+                    label: 'Jumlah Barang per Kondisi',
+                    data: kondisiData.map(item => item.total),
+                    backgroundColor: [
+                        '#10b981', '#f59e0b', '#f43f5e'
+                    ],
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }, 500); // 500ms delay to ensure Vite JS load
+});
+</script>
 @endsection

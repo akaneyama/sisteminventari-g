@@ -75,8 +75,13 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Tahun Perolehan <span class="text-red-500">*</span></label>
-                        <input type="number" name="tahun_perolehan" value="{{ old('tahun_perolehan', date('Y')) }}" required 
+                        <select name="id_tahun_pengadaan_new" required 
                             class="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 bg-gray-50 hover:bg-white text-gray-900 sm:text-sm transition duration-200 ease-in-out">
+                            <option value="">-- Pilih Tahun --</option>
+                            @foreach($tahun_pengadaan as $t)
+                                <option value="{{ $t->id_tahun_pengadaan }}" {{ old('id_tahun_pengadaan_new') == $t->id_tahun_pengadaan ? 'selected' : '' }}>{{ $t->tahun }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Kondisi <span class="text-red-500">*</span></label>
@@ -91,8 +96,13 @@
                 
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Sumber Dana <span class="text-red-500">*</span></label>
-                    <input type="text" name="sumber_dana" value="{{ old('sumber_dana', 'BOS') }}" required 
+                    <select name="id_sumber_dana_new" required 
                         class="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 bg-gray-50 hover:bg-white text-gray-900 sm:text-sm transition duration-200 ease-in-out">
+                        <option value="">-- Pilih Sumber Dana --</option>
+                        @foreach($sumber_dana as $s)
+                            <option value="{{ $s->id_sumber_dana }}" {{ old('id_sumber_dana_new') == $s->id_sumber_dana ? 'selected' : '' }}>{{ $s->nama_sumber_dana }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 
                 <div>

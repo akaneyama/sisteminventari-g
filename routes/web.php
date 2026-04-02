@@ -8,7 +8,9 @@ use App\Http\Controllers\BarangController;
 use App\Http\Controllers\MutasiController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\DashboardController;
-
+use App\Http\Controllers\SumberDanaController;
+use App\Http\Controllers\TahunPengadaanController;
+use App\Http\Controllers\SupplierController;
 // --------------------------------------------------------
 // RUTE DASAR & AUTENTIKASI
 // --------------------------------------------------------
@@ -39,6 +41,9 @@ Route::middleware('auth')->group(function () {
         // Master Data Kategori & Lokasi (Task 3)
         Route::resource('kategori', KategoriController::class);
         Route::resource('lokasi', LokasiController::class);
+        Route::resource('sumber-dana', SumberDanaController::class);
+        Route::resource('tahun-pengadaan', TahunPengadaanController::class);
+        Route::resource('supplier', SupplierController::class);
         
         // Modul Inti Data Barang (Task 4)
         Route::resource('barang', BarangController::class);

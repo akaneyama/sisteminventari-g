@@ -55,7 +55,18 @@ class KategoriController extends Controller
 
     public function destroy($id)
     {
-        $this->kategoriService->delete($id);
-        return redirect()->route('kategori.index')->with('success', 'Data Kategori berhasil dihapus!');
+        try {
+            $kategori = $this->kategoriService->getById($id);
+            if ($kategori->barangs()->exists()) {
+                return redirect()->route('kategori.index')
+                    ->with('error', 'Gagal menghapus! Kategori ini masih digunakan oleh ' . $kategori->barangs()->count() . ' barang.');
+            }
+
+            $this->kategoriService->delete($id);
+            return redirect()->route('kategori.index')->with('success', 'Data Kategori berhasil dihapus!');
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->route('kategori.index')
+                ->with('error', 'Gagal menghapus kategori karena terikat oleh data lain.');
+        }
     }
 }

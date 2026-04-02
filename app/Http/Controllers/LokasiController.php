@@ -55,7 +55,18 @@ class LokasiController extends Controller
 
     public function destroy($id)
     {
-        $this->lokasiService->delete($id);
-        return redirect()->route('lokasi.index')->with('success', 'Data Lokasi berhasil dihapus!');
+        try {
+            $lokasi = $this->lokasiService->getById($id);
+            if ($lokasi->barangs()->exists()) {
+                return redirect()->route('lokasi.index')
+                    ->with('error', 'Gagal menghapus! Lokasi ini masih digunakan oleh ' . $lokasi->barangs()->count() . ' barang.');
+            }
+
+            $this->lokasiService->delete($id);
+            return redirect()->route('lokasi.index')->with('success', 'Data Lokasi berhasil dihapus!');
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->route('lokasi.index')
+                ->with('error', 'Gagal menghapus lokasi karena terikat oleh data lain.');
+        }
     }
 }
