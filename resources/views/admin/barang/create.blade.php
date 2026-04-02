@@ -75,13 +75,8 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Tahun Perolehan <span class="text-red-500">*</span></label>
-                        <select name="id_tahun_pengadaan_new" required 
+                        <input type="number" name="tahun_perolehan" value="{{ old('tahun_perolehan', date('Y')) }}" required 
                             class="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 bg-gray-50 hover:bg-white text-gray-900 sm:text-sm transition duration-200 ease-in-out">
-                            <option value="">-- Pilih Tahun --</option>
-                            @foreach($tahun_pengadaan as $t)
-                                <option value="{{ $t->id_tahun_pengadaan }}" {{ old('id_tahun_pengadaan_new') == $t->id_tahun_pengadaan ? 'selected' : '' }}>{{ $t->tahun }}</option>
-                            @endforeach
-                        </select>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Kondisi <span class="text-red-500">*</span></label>
@@ -95,14 +90,32 @@
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Sumber Dana <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Sumber Dana & Tahun <span class="text-red-500">*</span></label>
                     <select name="id_sumber_dana_new" required 
                         class="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 bg-gray-50 hover:bg-white text-gray-900 sm:text-sm transition duration-200 ease-in-out">
                         <option value="">-- Pilih Sumber Dana --</option>
                         @foreach($sumber_dana as $s)
-                            <option value="{{ $s->id_sumber_dana }}" {{ old('id_sumber_dana_new') == $s->id_sumber_dana ? 'selected' : '' }}>{{ $s->nama_sumber_dana }}</option>
+                            <option value="{{ $s->id_sumber_dana }}" {{ old('id_sumber_dana_new') == $s->id_sumber_dana ? 'selected' : '' }}>{{ $s->nama_sumber_dana }} {{ $s->tahun ? '('.$s->tahun.')' : '' }}</option>
                         @endforeach
                     </select>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Supplier <span class="text-red-500">*</span></label>
+                        <select name="id_supplier" required 
+                            class="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 bg-gray-50 hover:bg-white text-gray-900 sm:text-sm transition duration-200 ease-in-out">
+                            <option value="">-- Pilih Supplier --</option>
+                            @foreach($supplier as $sup)
+                                <option value="{{ $sup->id_supplier }}" {{ old('id_supplier') == $sup->id_supplier ? 'selected' : '' }}>{{ $sup->nama_supplier }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Jumlah Barang <span class="text-red-500">*</span></label>
+                        <input type="number" name="jumlah_barang" value="{{ old('jumlah_barang', 1) }}" min="1" required 
+                            class="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 bg-gray-50 hover:bg-white text-gray-900 sm:text-sm transition duration-200 ease-in-out">
+                    </div>
                 </div>
                 
                 <div>

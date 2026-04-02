@@ -22,7 +22,8 @@ class Barang extends Model
         'id_kategori',
         'id_lokasi',
         'id_sumber_dana_new',
-        'id_tahun_pengadaan_new',
+        'id_supplier',
+        'jumlah_barang',
         'foto_barang',
     ];
 
@@ -43,8 +44,8 @@ class Barang extends Model
         return $this->belongsTo(SumberDana::class, 'id_sumber_dana_new', 'id_sumber_dana');
     }
 
-    public function tahunPengadaan()
+    public function supplier()
     {
-        return $this->belongsTo(TahunPengadaan::class, 'id_tahun_pengadaan_new', 'id_tahun_pengadaan');
+        return $this->belongsTo(Supplier::class, 'id_supplier', 'id_supplier');
     }
 }

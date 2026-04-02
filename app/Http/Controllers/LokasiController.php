@@ -14,10 +14,11 @@ class LokasiController extends Controller
         $this->lokasiService = $lokasiService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $lokasi = $this->lokasiService->getAll();
-        return view('admin.lokasi.index', compact('lokasi'));
+        $filter = $request->only(['search']);
+        $lokasi = $this->lokasiService->getAll($filter);
+        return view('admin.lokasi.index', compact('lokasi', 'filter'));
     }
 
     public function create()

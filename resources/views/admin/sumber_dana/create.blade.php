@@ -14,11 +14,19 @@
     <form action="{{ route('sumber-dana.store') }}" method="POST" class="space-y-6">
         @csrf
         
-        <div>
-            <label for="nama_sumber_dana" class="block text-sm font-semibold text-gray-700 mb-2">Nama Sumber Dana <span class="text-red-500">*</span></label>
-            <input type="text" name="nama_sumber_dana" id="nama_sumber_dana" required autofocus
-                class="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 bg-gray-50 hover:bg-white text-gray-900 sm:text-sm transition duration-200 ease-in-out" 
-                placeholder="Misal: BOS, Komite, Bantuan Provinsi">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label for="nama_sumber_dana" class="block text-sm font-semibold text-gray-700 mb-2">Nama Sumber Dana <span class="text-red-500">*</span></label>
+                <input type="text" name="nama_sumber_dana" id="nama_sumber_dana" required autofocus
+                    class="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 bg-gray-50 hover:bg-white text-gray-900 sm:text-sm transition duration-200 ease-in-out" 
+                    placeholder="Misal: BOS, Komite">
+            </div>
+            <div>
+                <label for="tahun" class="block text-sm font-semibold text-gray-700 mb-2">Tahun / Periode <span class="text-red-500">*</span></label>
+                <input type="number" name="tahun" id="tahun" required value="{{ date('Y') }}"
+                    class="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 bg-gray-50 hover:bg-white text-gray-900 sm:text-sm transition duration-200 ease-in-out" 
+                    placeholder="Misal: 2024">
+            </div>
         </div>
         
         <div>

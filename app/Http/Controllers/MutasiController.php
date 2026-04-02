@@ -16,10 +16,11 @@ class MutasiController extends Controller
         $this->mutasiService = $mutasiService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $mutasi = $this->mutasiService->getAll();
-        return view('admin.mutasi.index', compact('mutasi'));
+        $filter = $request->only(['search', 'jenis_mutasi', 'tanggal_dari', 'tanggal_sampai']);
+        $mutasi = $this->mutasiService->getAll($filter);
+        return view('admin.mutasi.index', compact('mutasi', 'filter'));
     }
 
     public function create()
@@ -36,6 +37,7 @@ class MutasiController extends Controller
         $data = $request->validate([
             'tanggal_mutasi'  => 'required|date',
             'id_barang'       => 'required|exists:barang,id_barang',
+            'jumlah'          => 'required|integer|min:1',
             'jenis_mutasi'    => 'required|in:Pindah Lokasi,Ubah Status,Penghapusan',
             'lokasi_tujuan'   => 'nullable|required_if:jenis_mutasi,Pindah Lokasi|exists:lokasi,id_lokasi',
             'kondisi_sesudah' => 'nullable|required_if:jenis_mutasi,Ubah Status|in:Baik,Rusak Ringan,Rusak Berat',

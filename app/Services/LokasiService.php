@@ -6,9 +6,17 @@ use App\Models\Lokasi;
 
 class LokasiService
 {
-    public function getAll()
+    public function getAll(array $filter = [])
     {
-        return Lokasi::latest()->get();
+        $query = Lokasi::query();
+        if (!empty($filter['search'])) {
+            $s = $filter['search'];
+            $query->where(function($q) use ($s) {
+                $q->where('nama_ruangan', 'like', "%{$s}%")
+                  ->orWhere('gedung', 'like', "%{$s}%");
+            });
+        }
+        return $query->latest()->get();
     }
 
     public function create(array $data)

@@ -9,7 +9,6 @@ use App\Http\Controllers\MutasiController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SumberDanaController;
-use App\Http\Controllers\TahunPengadaanController;
 use App\Http\Controllers\SupplierController;
 // --------------------------------------------------------
 // RUTE DASAR & AUTENTIKASI
@@ -42,7 +41,6 @@ Route::middleware('auth')->group(function () {
         Route::resource('kategori', KategoriController::class);
         Route::resource('lokasi', LokasiController::class);
         Route::resource('sumber-dana', SumberDanaController::class);
-        Route::resource('tahun-pengadaan', TahunPengadaanController::class);
         Route::resource('supplier', SupplierController::class);
         
         // Modul Inti Data Barang (Task 4)
@@ -53,6 +51,7 @@ Route::middleware('auth')->group(function () {
 
         // Rute Cetak Label QR Per Barang (Task 6)
         Route::get('/barang/{id}/label', [LaporanController::class, 'printLabel'])->name('barang.label');
+        Route::post('/barang/label/batch', [LaporanController::class, 'printLabelBatch'])->name('barang.label.batch');
     });
 
 

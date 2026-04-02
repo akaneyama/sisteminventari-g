@@ -6,9 +6,19 @@ use App\Models\Supplier;
 
 class SupplierService
 {
-    public function getAll()
+    public function getAll(array $filter = [])
     {
-        return Supplier::latest()->get();
+        $query = Supplier::query();
+        if (!empty($filter['search'])) {
+            $s = $filter['search'];
+            $query->where(function($q) use ($s) {
+                $q->where('nama_supplier', 'like', "%{$s}%")
+                  ->orWhere('telepon', 'like', "%{$s}%")
+                  ->orWhere('email', 'like', "%{$s}%")
+                  ->orWhere('kontak_person', 'like', "%{$s}%");
+            });
+        }
+        return $query->latest()->get();
     }
 
     public function create(array $data)

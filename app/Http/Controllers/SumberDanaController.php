@@ -14,10 +14,11 @@ class SumberDanaController extends Controller
         $this->sumberDanaService = $sumberDanaService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $sumber_dana = $this->sumberDanaService->getAll();
-        return view('admin.sumber_dana.index', compact('sumber_dana'));
+        $filter     = $request->only(['search', 'tahun']);
+        $sumber_dana = $this->sumberDanaService->getAll($filter);
+        return view('admin.sumber_dana.index', compact('sumber_dana', 'filter'));
     }
 
     public function create()
@@ -29,6 +30,7 @@ class SumberDanaController extends Controller
     {
         $data = $request->validate([
             'nama_sumber_dana' => 'required|string|max:255|unique:sumber_dana,nama_sumber_dana',
+            'tahun' => 'required|integer|digits:4',
             'deskripsi' => 'nullable|string',
         ]);
 
@@ -46,6 +48,7 @@ class SumberDanaController extends Controller
     {
         $data = $request->validate([
             'nama_sumber_dana' => 'required|string|max:255|unique:sumber_dana,nama_sumber_dana,'.$id.',id_sumber_dana',
+            'tahun' => 'required|integer|digits:4',
             'deskripsi' => 'nullable|string',
         ]);
 

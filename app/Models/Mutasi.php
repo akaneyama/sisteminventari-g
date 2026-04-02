@@ -13,6 +13,7 @@ class Mutasi extends Model
         'tanggal_mutasi',
         'jenis_mutasi',
         'id_barang',
+        'jumlah',
         'id_user',
         'lokasi_asal',
         'lokasi_tujuan',

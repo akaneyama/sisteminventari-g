@@ -40,13 +40,20 @@
 
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Pilih Barang <span class="text-red-500">*</span></label>
-                <select name="id_barang" required 
+                <select name="id_barang" id="id_barang" required onchange="updateMaxJumlah()"
                     class="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 bg-gray-50 hover:bg-white text-gray-900 sm:text-sm transition duration-200 ease-in-out">
-                    <option value="">-- Cari Barang --</option>
+                    <option value="" data-jumlah="0">-- Cari Barang --</option>
                     @foreach($barang as $b)
-                        <option value="{{ $b->id_barang }}">{{ $b->kode_inventaris }} - {{ $b->nama_barang }} (Lokasi: {{ $b->lokasi->nama_ruangan ?? '-' }})</option>
+                        <option value="{{ $b->id_barang }}" data-jumlah="{{ $b->jumlah_barang }}">{{ $b->kode_inventaris }} - {{ $b->nama_barang }} (Lok: {{ $b->lokasi->nama_ruangan ?? '-' }}, Sisa: {{ $b->jumlah_barang }})</option>
                     @endforeach
                 </select>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Jumlah Dimutasi <span class="text-red-500">*</span></label>
+                <input type="number" name="jumlah" id="jumlah" min="1" value="1" required 
+                    class="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 bg-gray-50 hover:bg-white text-gray-900 sm:text-sm transition duration-200 ease-in-out">
+                <p class="text-xs text-gray-500 mt-1" id="max_jumlah_info">Pilih barang untuk melihat limit maksimal mutasi.</p>
             </div>
         </div>
 
@@ -123,6 +130,26 @@
         } else if (jenis === 'Ubah Status') {
             fieldStatus.classList.remove('hidden');
             document.getElementById('kondisi_sesudah').required = true;
+        }
+    }
+    
+    function updateMaxJumlah() {
+        const selectBarang = document.getElementById('id_barang');
+        const inputJumlah = document.getElementById('jumlah');
+        const infoMax = document.getElementById('max_jumlah_info');
+        
+        if(selectBarang.selectedIndex > 0) {
+            const selectedOption = selectBarang.options[selectBarang.selectedIndex];
+            const max = parseInt(selectedOption.getAttribute('data-jumlah'));
+            
+            inputJumlah.max = max;
+            if(parseInt(inputJumlah.value) > max) {
+                inputJumlah.value = max;
+            }
+            infoMax.textContent = `Maksimal barang yang bisa dimutasi: ${max} unit`;
+        } else {
+            inputJumlah.max = "";
+            infoMax.textContent = `Pilih barang untuk melihat limit maksimal mutasi.`;
         }
     }
 </script>

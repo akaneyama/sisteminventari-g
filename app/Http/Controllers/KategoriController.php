@@ -14,10 +14,11 @@ class KategoriController extends Controller
         $this->kategoriService = $kategoriService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $kategori = $this->kategoriService->getAll();
-        return view('admin.kategori.index', compact('kategori'));
+        $filter  = $request->only(['search']);
+        $kategori = $this->kategoriService->getAll($filter);
+        return view('admin.kategori.index', compact('kategori', 'filter'));
     }
 
     public function create()

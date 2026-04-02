@@ -6,9 +6,17 @@ use App\Models\Kategori;
 
 class KategoriService
 {
-    public function getAll()
+    public function getAll(array $filter = [])
     {
-        return Kategori::latest()->get();
+        $query = Kategori::query();
+        if (!empty($filter['search'])) {
+            $s = $filter['search'];
+            $query->where(function($q) use ($s) {
+                $q->where('nama_kategori', 'like', "%{$s}%")
+                  ->orWhere('deskripsi', 'like', "%{$s}%");
+            });
+        }
+        return $query->latest()->get();
     }
 
     public function create(array $data)

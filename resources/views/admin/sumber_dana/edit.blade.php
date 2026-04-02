@@ -15,10 +15,17 @@
         @csrf
         @method('PUT')
         
-        <div>
-            <label for="nama_sumber_dana" class="block text-sm font-semibold text-gray-700 mb-2">Nama Sumber Dana <span class="text-red-500">*</span></label>
-            <input type="text" name="nama_sumber_dana" id="nama_sumber_dana" value="{{ $sumber_dana->nama_sumber_dana }}" required 
-                class="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 bg-gray-50 hover:bg-white text-gray-900 sm:text-sm transition duration-200 ease-in-out">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label for="nama_sumber_dana" class="block text-sm font-semibold text-gray-700 mb-2">Nama Sumber Dana <span class="text-red-500">*</span></label>
+                <input type="text" name="nama_sumber_dana" id="nama_sumber_dana" value="{{ $sumber_dana->nama_sumber_dana }}" required 
+                    class="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 bg-gray-50 hover:bg-white text-gray-900 sm:text-sm transition duration-200 ease-in-out">
+            </div>
+            <div>
+                <label for="tahun" class="block text-sm font-semibold text-gray-700 mb-2">Tahun / Periode <span class="text-red-500">*</span></label>
+                <input type="number" name="tahun" id="tahun" value="{{ $sumber_dana->tahun }}" required 
+                    class="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 bg-gray-50 hover:bg-white text-gray-900 sm:text-sm transition duration-200 ease-in-out">
+            </div>
         </div>
         
         <div>
