@@ -45,6 +45,6 @@ class MutasiController extends Controller
         ]);
 
         $this->mutasiService->create($data);
-        return redirect()->route('mutasi.index')->with('success', 'Mutasi barang berhasil diproses dan dicatat!');
+        return redirect()->route('mutasi.index')->with('success', 'Mutasi barang berhasil diajukan dan menunggu persetujuan Kepala Sekolah!');
     }
 }

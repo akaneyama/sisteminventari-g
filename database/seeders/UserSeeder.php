@@ -17,8 +17,8 @@ class UserSeeder extends Seeder
         User::create([
             'nama_lengkap' => 'Admin Inventaris',
             'username'     => 'admin',
-            'email'        => 'admin@sekolah.com',
-            'password'     => 'password123',
+            'email'        => 'admin@sekolah.com', //username
+            'password'     => 'password123', //password 
             'role'         => 'Admin',
         ]);
 

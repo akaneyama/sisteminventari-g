@@ -20,6 +20,8 @@ class Mutasi extends Model
         'kondisi_sebelum',
         'kondisi_sesudah',
         'keterangan',
+        'status',
+        'alasan_penolakan',
     ];
 
     // Relasi

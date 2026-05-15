@@ -80,13 +80,18 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
+        // ── Evaluasi Laporan (Belum Dibaca) ────────────────────────────────
+        $evaluasi_laporan = \App\Models\EvaluasiLaporan::where('status', 'Belum Dibaca')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         return view('admin.dashboard', compact(
             'total_jenis', 'total_unit', 'aset_baik', 'rusak_ringan', 'rusak_berat',
             'total_kategori', 'total_lokasi', 'total_supplier', 'total_sumberdana',
             'mutasi_bulan_ini', 'mutasi_terbaru',
             'kategoriData', 'kondisiData',
             'mutasiLabels', 'mutasiValues',
-            'topLokasi'
+            'topLokasi', 'evaluasi_laporan'
         ));
     }
 
@@ -95,7 +100,8 @@ class DashboardController extends Controller
         $total_jenis  = Barang::count();
         $total_unit   = Barang::sum('jumlah_barang') ?: 0;
         $aset_baik    = Barang::where('kondisi', 'Baik')->sum('jumlah_barang') ?: 0;
-        $aset_rusak   = Barang::whereIn('kondisi', ['Rusak Ringan', 'Rusak Berat'])->sum('jumlah_barang') ?: 0;
+        $aset_rusak   = Barang::where('kondisi', 'Rusak Berat')->sum('jumlah_barang') ?: 0;
+        $aset_rusak_ringan   = Barang::where('kondisi', 'Rusak Ringan')->sum('jumlah_barang') ?: 0;
 
         $kondisiData = Barang::select('kondisi', DB::raw('SUM(jumlah_barang) as total'))
             ->groupBy('kondisi')
@@ -109,7 +115,7 @@ class DashboardController extends Controller
             ->get();
 
         return view('kepsek.dashboard', compact(
-            'total_jenis', 'total_unit', 'aset_baik', 'aset_rusak', 'kondisiData', 'kategoriData'
+            'total_jenis', 'total_unit', 'aset_baik', 'aset_rusak', 'aset_rusak_ringan', 'kondisiData', 'kategoriData'
         ));
     }
 }

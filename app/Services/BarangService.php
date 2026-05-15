@@ -3,13 +3,18 @@
 namespace App\Services;
 
 use App\Models\Barang;
+use App\Models\PerubahanBarang;
 use Illuminate\Support\Facades\Storage;
 
 class BarangService
 {
-    public function getAll(array $filter = [])
+    public function getAll(array $filter = [], $excludePendingDelete = true)
     {
         $query = Barang::with(['kategori', 'lokasi', 'supplier', 'sumberDana']);
+
+        if ($excludePendingDelete) {
+            $query->where('status_approval', 'Tersedia');
+        }
 
         if (!empty($filter['search'])) {
             $s = $filter['search'];
@@ -26,12 +31,19 @@ class BarangService
         return $query->latest()->get();
     }
 
+    public function getPendingApproval()
+    {
+        return Barang::with(['kategori', 'lokasi'])->where('status_approval', 'Menunggu Penghapusan')->latest()->get();
+    }
+
     public function create(array $data)
     {
         // Handle upload foto jika ada
         if (isset($data['foto_barang'])) {
             $data['foto_barang'] = $data['foto_barang']->store('barang_fotos', 'public');
         }
+
+        $data['status_approval'] = 'Menunggu Pengadaan';
 
         return Barang::create($data);
     }
@@ -45,23 +57,121 @@ class BarangService
     {
         $barang = Barang::findOrFail($id);
 
-        // Handle upload foto baru jika ada
+        // Handle foto: langsung diupdate tanpa approval
         if (isset($data['foto_barang'])) {
-            // Hapus foto lama jika ada
             if ($barang->foto_barang && Storage::disk('public')->exists($barang->foto_barang)) {
                 Storage::disk('public')->delete($barang->foto_barang);
             }
-            $data['foto_barang'] = $data['foto_barang']->store('barang_fotos', 'public');
+            $barang->foto_barang = $data['foto_barang']->store('barang_fotos', 'public');
+            $barang->save();
+            unset($data['foto_barang']);
         }
 
-        $barang->update($data);
+        // Jika tidak ada data lain yang berubah, selesai
+        if (empty($data)) return $barang;
+
+        // Snapshot data lama (field yang diubah saja)
+        $dataLama = $barang->only(array_keys($data));
+
+        // Simpan ke perubahan_barangs, bukan langsung ke barang
+        PerubahanBarang::create([
+            'id_barang'  => $barang->id_barang,
+            'data_lama'  => $dataLama,
+            'data_baru'  => $data,
+            'status'     => 'Menunggu',
+        ]);
+
         return $barang;
     }
 
-    public function delete($id)
+    public function requestDelete($id)
     {
         $barang = Barang::findOrFail($id);
-        // Karena pakai soft deletes, fotonya tidak kita hapus secara fisik
+        $barang->status_approval = 'Menunggu Penghapusan';
+        $barang->save();
+        return $barang;
+    }
+
+    public function approveDelete($id)
+    {
+        $barang = Barang::findOrFail($id);
+        // Kembalikan ke Tersedia agar saat di-restore nanti statusnya normal
+        $barang->status_approval = 'Tersedia'; 
+        $barang->save();
+        // Lakukan soft delete
         return $barang->delete();
+    }
+
+    public function rejectDelete($id)
+    {
+        $barang = Barang::findOrFail($id);
+        $barang->status_approval = 'Tersedia';
+        $barang->save();
+        return $barang;
+    }
+
+    public function getPengadaanStatus()
+    {
+        return Barang::with(['kategori', 'lokasi'])
+            ->whereIn('status_approval', ['Menunggu Pengadaan', 'Pengadaan Ditolak'])
+            ->latest()
+            ->get();
+    }
+
+    public function getPendingPengadaan()
+    {
+        return Barang::with(['kategori', 'lokasi'])
+            ->where('status_approval', 'Menunggu Pengadaan')
+            ->latest()
+            ->get();
+    }
+
+    public function approvePengadaan($id)
+    {
+        $barang = Barang::findOrFail($id);
+        $barang->status_approval = 'Tersedia';
+        $barang->alasan_penolakan = null;
+        $barang->save();
+        return $barang;
+    }
+
+    public function rejectPengadaan($id, $alasan)
+    {
+        $barang = Barang::findOrFail($id);
+        $barang->status_approval = 'Pengadaan Ditolak';
+        $barang->alasan_penolakan = $alasan;
+        $barang->save();
+        return $barang;
+    }
+
+    public function getPendingPerubahan()
+    {
+        return PerubahanBarang::with(['barang.kategori', 'barang.lokasi'])
+            ->where('status', 'Menunggu')
+            ->latest()
+            ->get();
+    }
+
+    public function approvePerubahan($id)
+    {
+        $perubahan = PerubahanBarang::findOrFail($id);
+        $barang = Barang::findOrFail($perubahan->id_barang);
+
+        // Resolve relasi ID jika ada (misal id_kategori, id_lokasi)
+        $barang->update($perubahan->data_baru);
+
+        $perubahan->status = 'Disetujui';
+        $perubahan->save();
+
+        return $barang;
+    }
+
+    public function rejectPerubahan($id, $alasan)
+    {
+        $perubahan = PerubahanBarang::findOrFail($id);
+        $perubahan->status = 'Ditolak';
+        $perubahan->alasan_penolakan = $alasan;
+        $perubahan->save();
+        return $perubahan;
     }
 }

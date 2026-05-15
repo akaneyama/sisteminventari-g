@@ -12,6 +12,8 @@ use App\Http\Controllers\SumberDanaController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\Kepsek\KepsekBarangController;
 use App\Http\Controllers\Kepsek\KepsekMutasiController;
+use App\Http\Controllers\Kepsek\ApprovalController;
+use App\Http\Controllers\IdentitasSekolahController;
 // --------------------------------------------------------
 // RUTE DASAR & AUTENTIKASI
 // --------------------------------------------------------
@@ -45,6 +47,10 @@ Route::middleware('auth')->group(function () {
         Route::resource('sumber-dana', SumberDanaController::class);
         Route::resource('supplier', SupplierController::class);
         
+        // Master Data Identitas Sekolah
+        Route::get('identitas', [IdentitasSekolahController::class, 'index'])->name('identitas.index');
+        Route::post('identitas', [IdentitasSekolahController::class, 'update'])->name('identitas.update');
+        
         // Modul Inti Data Barang (Task 4)
         Route::resource('barang', BarangController::class);
         
@@ -54,6 +60,18 @@ Route::middleware('auth')->group(function () {
         // Rute Cetak Label QR Per Barang (Task 6)
         Route::get('/barang/{id}/label', [LaporanController::class, 'printLabel'])->name('barang.label');
         Route::post('/barang/label/batch', [LaporanController::class, 'printLabelBatch'])->name('barang.label.batch');
+
+        // Evaluasi Laporan
+        Route::patch('evaluasi/{id}/read', [\App\Http\Controllers\EvaluasiController::class, 'markAsRead'])->name('admin.evaluasi.read');
+
+        // Perbaikan Aset (Maintenance)
+        Route::get('/perbaikan', [\App\Http\Controllers\PerbaikanController::class, 'index'])->name('perbaikan.index');
+        Route::get('/perbaikan/create', [\App\Http\Controllers\PerbaikanController::class, 'create'])->name('perbaikan.create');
+        Route::post('/perbaikan', [\App\Http\Controllers\PerbaikanController::class, 'store'])->name('perbaikan.store');
+        Route::patch('/perbaikan/{id}/selesai', [\App\Http\Controllers\PerbaikanController::class, 'selesai'])->name('perbaikan.selesai');
+
+        // Status Pengajuan Pengadaan (Admin)
+        Route::get('/pengajuan', [\App\Http\Controllers\PengajuanController::class, 'index'])->name('admin.pengajuan.index');
     });
 
 
@@ -74,6 +92,26 @@ Route::middleware('auth')->group(function () {
         // Cetak Label (sama dengan admin)
         Route::get('/barang/{id}/label', [LaporanController::class, 'printLabel'])->name('kepsek.barang.label');
         Route::post('/barang/label/batch', [LaporanController::class, 'printLabelBatch'])->name('kepsek.barang.label.batch');
+
+        // Persetujuan Penghapusan Aset
+        Route::get('/approval', [\App\Http\Controllers\Kepsek\ApprovalController::class, 'index'])->name('kepsek.approval.index');
+        Route::patch('/approval/{id}/approve', [\App\Http\Controllers\Kepsek\ApprovalController::class, 'approve'])->name('kepsek.approval.approve');
+        Route::patch('/approval/{id}/reject', [\App\Http\Controllers\Kepsek\ApprovalController::class, 'reject'])->name('kepsek.approval.reject');
+
+        // Persetujuan Pengadaan Barang Baru
+        Route::get('/approval/pengadaan', [ApprovalController::class, 'pengadaan'])->name('kepsek.approval.pengadaan');
+        Route::patch('/approval/pengadaan/{id}/approve', [ApprovalController::class, 'approvePengadaan'])->name('kepsek.approval.pengadaan.approve');
+        Route::patch('/approval/pengadaan/{id}/reject', [ApprovalController::class, 'rejectPengadaan'])->name('kepsek.approval.pengadaan.reject');
+
+        // Persetujuan Perubahan Data Barang
+        Route::get('/approval/perubahan', [ApprovalController::class, 'perubahan'])->name('kepsek.approval.perubahan');
+        Route::patch('/approval/perubahan/{id}/approve', [ApprovalController::class, 'approvePerubahan'])->name('kepsek.approval.perubahan.approve');
+        Route::patch('/approval/perubahan/{id}/reject', [ApprovalController::class, 'rejectPerubahan'])->name('kepsek.approval.perubahan.reject');
+
+        // Persetujuan Mutasi Barang
+        Route::get('/approval/mutasi', [ApprovalController::class, 'mutasi'])->name('kepsek.approval.mutasi');
+        Route::patch('/approval/mutasi/{id}/approve', [ApprovalController::class, 'approveMutasi'])->name('kepsek.approval.mutasi.approve');
+        Route::patch('/approval/mutasi/{id}/reject', [ApprovalController::class, 'rejectMutasi'])->name('kepsek.approval.mutasi.reject');
     });
 
 
@@ -87,6 +125,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/excel', [LaporanController::class, 'exportExcel'])->name('laporan.excel');
         Route::get('/pdf', [LaporanController::class, 'exportPdf'])->name('laporan.pdf');
         
+        // Simpan Evaluasi Laporan
+        Route::post('/evaluasi', [\App\Http\Controllers\EvaluasiController::class, 'store'])->name('laporan.evaluasi.store');
     });
 
 });

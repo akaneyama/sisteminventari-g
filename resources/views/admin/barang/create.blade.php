@@ -1,13 +1,22 @@
 @extends('layouts.app')
-@section('title', 'Tambah Barang Baru')
+@section('title', 'Buat Pengajuan Barang Baru')
 
 @section('content')
 <div class="mb-6">
-    <a href="{{ route('barang.index') }}" class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-blue-600 transition-colors mb-2">
+    <a href="{{ route('admin.pengajuan.index') }}" class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-blue-600 transition-colors mb-2">
         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-        Kembali ke Daftar
+        Kembali ke Status Pengajuan
     </a>
-    <h2 class="text-2xl font-bold text-gray-800 tracking-tight">Tambah Barang Baru</h2>
+    <h2 class="text-2xl font-bold text-gray-800 tracking-tight">Buat Pengajuan Barang Baru</h2>
+    <p class="text-sm text-gray-500 mt-1">Isi detail barang yang ingin diajukan. Pengajuan ini akan dikirim ke Kepala Sekolah untuk disetujui sebelum masuk ke inventaris.</p>
+</div>
+
+<div class="mb-6 bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3">
+    <svg class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+    <div>
+        <p class="text-sm font-bold text-amber-800">Perlu Persetujuan Kepala Sekolah</p>
+        <p class="text-xs text-amber-700 mt-0.5">Barang yang Anda ajukan <strong>tidak akan langsung masuk</strong> ke daftar inventaris. Kepala Sekolah perlu menyetujui pengajuan ini terlebih dahulu.</p>
+    </div>
 </div>
 
 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8">
@@ -127,13 +136,14 @@
         </div>
 
         <div class="flex flex-col sm:flex-row items-center justify-end space-y-3 sm:space-y-0 sm:space-x-3 pt-8 border-t border-gray-100 mt-8">
-            <a href="{{ route('barang.index') }}" 
+            <a href="{{ route('admin.pengajuan.index') }}" 
                 class="w-full sm:w-auto py-2.5 px-5 text-center border border-gray-200 rounded-xl text-sm font-semibold text-gray-700 bg-white hover:bg-gray-50 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-all duration-200">
                 Batal
             </a>
             <button type="submit" 
                 class="w-full sm:w-auto py-2.5 px-6 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 ease-in-out transform hover:-translate-y-0.5">
-                Simpan Data Barang
+                <svg class="w-4 h-4 mr-1.5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                Kirim Pengajuan
             </button>
         </div>
     </form>

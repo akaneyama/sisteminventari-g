@@ -45,6 +45,15 @@
         </div>
     </div>
     <div class="bg-white rounded-2xl shadow-sm border border-red-100 p-5 flex items-center gap-4">
+        <div class="p-3 bg-orange-100 rounded-xl flex-shrink-0">
+            <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <div>
+            <p class="text-xs text-gray-500 font-medium">Kondisi Rusak Ringan</p>
+            <p class="text-2xl font-bold text-orange-600">{{ number_format($aset_rusak_ringan) }}</p>
+        </div>
+    </div>
+       <div class="bg-white rounded-2xl shadow-sm border border-red-100 p-5 flex items-center gap-4">
         <div class="p-3 bg-red-100 rounded-xl flex-shrink-0">
             <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
@@ -72,7 +81,8 @@
 {{-- Persentase kondisi aset --}}
 @php
     $pct_baik = $total_unit > 0 ? round($aset_baik / $total_unit * 100) : 0;
-    $pct_rusak = 100 - $pct_baik;
+    $pct_rusak_ringan = $total_unit > 0 ? round($aset_rusak_ringan / $total_unit * 100) : 0;
+    $pct_rusak = $total_unit > 0 ? round($aset_rusak / $total_unit * 100) : 0;
 @endphp
 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
     <h3 class="text-base font-bold text-gray-800 mb-4">Tingkat Kesehatan Aset</h3>
@@ -84,7 +94,14 @@
         <span class="text-sm font-bold text-green-700 w-12 text-right">{{ $pct_baik }}%</span>
     </div>
     <div class="flex items-center gap-4">
-        <span class="text-sm font-semibold text-gray-700 w-28">Kondisi Rusak</span>
+        <span class="text-sm font-semibold text-gray-700 w-28">Kondisi Rusak Ringan</span>
+        <div class="flex-1 bg-gray-100 rounded-full h-3">
+            <div class="h-3 rounded-full bg-orange-400 transition-all" style="width: {{ $pct_rusak_ringan }}%"></div>
+        </div>
+        <span class="text-sm font-bold text-orange-600 w-12 text-right">{{ $pct_rusak_ringan }}%</span>
+    </div>
+     <div class="flex items-center gap-4">
+        <span class="text-sm font-semibold text-gray-700 w-28">Kondisi Rusak Berat</span>
         <div class="flex-1 bg-gray-100 rounded-full h-3">
             <div class="h-3 rounded-full bg-red-400 transition-all" style="width: {{ $pct_rusak }}%"></div>
         </div>

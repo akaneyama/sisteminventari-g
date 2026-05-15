@@ -66,7 +66,7 @@ class BarangController extends Controller
         $data['sumber_dana'] = $sd->nama_sumber_dana;
 
         $this->barangService->create($data);
-        return redirect()->route('barang.index')->with('success', 'Data Barang berhasil ditambahkan!');
+        return redirect()->route('admin.pengajuan.index')->with('success', 'Barang berhasil diajukan dan sedang menunggu persetujuan Kepala Sekolah.');
     }
 
     public function edit($id)
@@ -101,12 +101,12 @@ class BarangController extends Controller
         $data['sumber_dana'] = $sd->nama_sumber_dana;
 
         $this->barangService->update($id, $data);
-        return redirect()->route('barang.index')->with('success', 'Data Barang berhasil diperbarui!');
+        return redirect()->route('barang.index')->with('success', 'Perubahan data barang telah diajukan dan menunggu persetujuan Kepala Sekolah.');
     }
 
     public function destroy($id)
     {
-        $this->barangService->delete($id);
-        return redirect()->route('barang.index')->with('success', 'Data Barang berhasil dihapus!');
+        $this->barangService->requestDelete($id);
+        return redirect()->route('barang.index')->with('success', 'Penghapusan barang diajukan dan menunggu persetujuan Kepala Sekolah.');
     }
 }

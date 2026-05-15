@@ -25,6 +25,8 @@ class Barang extends Model
         'id_supplier',
         'jumlah_barang',
         'foto_barang',
+        'status_approval',
+        'alasan_penolakan',
     ];
 
     // Relasi ke tabel Kategori
@@ -47,5 +49,15 @@ class Barang extends Model
     public function supplier()
     {
         return $this->belongsTo(Supplier::class, 'id_supplier', 'id_supplier');
+    }
+
+    public function perbaikans()
+    {
+        return $this->hasMany(Perbaikan::class, 'id_barang', 'id_barang');
+    }
+
+    public function perubahanBarangs()
+    {
+        return $this->hasMany(PerubahanBarang::class, 'id_barang', 'id_barang');
     }
 }

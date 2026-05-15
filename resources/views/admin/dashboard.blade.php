@@ -27,6 +27,32 @@
     </div>
 </div>
 
+@if(isset($evaluasi_laporan) && $evaluasi_laporan->count() > 0)
+<div class="mb-6 space-y-3">
+    @foreach($evaluasi_laporan as $eval)
+    <div class="bg-blue-50 border border-blue-200 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-start justify-between gap-4 shadow-sm">
+        <div class="flex items-start gap-3">
+            <div class="mt-0.5 bg-blue-100 p-2 rounded-lg text-blue-600 flex-shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <div>
+                <h4 class="text-sm font-bold text-gray-800">Evaluasi Laporan: {{ $eval->periode }}</h4>
+                <p class="text-sm text-gray-700 mt-1 leading-relaxed whitespace-pre-wrap">{{ $eval->catatan }}</p>
+                <p class="text-xs text-gray-500 mt-2">Dikirim {{ $eval->created_at->diffForHumans() }}</p>
+            </div>
+        </div>
+        <form action="{{ route('admin.evaluasi.read', $eval->id_evaluasi) }}" method="POST" class="flex-shrink-0">
+            @csrf @method('PATCH')
+            <button type="submit" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-semibold transition-colors">
+                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                Tandai Selesai
+            </button>
+        </form>
+    </div>
+    @endforeach
+</div>
+@endif
+
 {{-- Kartu Statistik Utama --}}
 <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex items-center gap-4 hover:shadow-md transition-shadow">

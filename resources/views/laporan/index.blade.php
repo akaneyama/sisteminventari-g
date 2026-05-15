@@ -182,4 +182,36 @@
         </table>
     </div>
 </div>
+
+@if(auth()->user()->role === 'Kepsek')
+<div class="mt-8 bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+    <h3 class="text-lg font-bold text-gray-800 mb-2">Catatan Pimpinan / Evaluasi</h3>
+    <p class="text-sm text-gray-500 mb-4">Berikan catatan atau instruksi terkait laporan inventaris ini. Catatan akan muncul di Dashboard Admin.</p>
+    
+    @if(session('success'))
+        <div class="mb-4 p-4 bg-green-50 border-l-4 border-green-500 text-green-700 rounded-xl text-sm font-medium">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    <form action="{{ route('laporan.evaluasi.store') }}" method="POST">
+        @csrf
+        <div class="mb-4">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Periode Evaluasi <span class="text-red-500">*</span></label>
+            <input type="text" name="periode" placeholder="Contoh: Semester 1 Tahun Ajaran 2026/2027" required class="block w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-blue-500 focus:border-blue-500 text-sm transition-colors">
+        </div>
+        <div class="mb-4">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Catatan / Instruksi <span class="text-red-500">*</span></label>
+            <textarea name="catatan" rows="4" required placeholder="Tuliskan catatan evaluasi atau instruksi untuk admin..." class="block w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-blue-500 focus:border-blue-500 text-sm transition-colors"></textarea>
+        </div>
+        <div class="flex justify-end">
+            <button type="submit" class="inline-flex items-center justify-center py-2.5 px-6 rounded-xl shadow-sm text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-all duration-200">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                Kirim Evaluasi ke Admin
+            </button>
+        </div>
+    </form>
+</div>
+@endif
+
 @endsection

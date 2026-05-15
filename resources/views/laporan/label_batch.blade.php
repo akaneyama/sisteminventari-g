@@ -60,15 +60,16 @@
             box-shadow: 0 4px 16px rgba(0,0,0,0.08);
         }
         .label-header {
-            background: linear-gradient(135deg, #1e40af, #3b82f6);
-            color: white;
+            background: #ffffff;
+            color: #374151;
             padding: 9px 14px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            border-bottom: 1px solid #f3f4f6;
         }
-        .label-header .school { font-size: 9px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
-        .label-header .inv-badge { font-size: 8px; font-weight: 700; background: rgba(255,255,255,0.25); padding: 2px 7px; border-radius: 20px; }
+        .label-header .school { font-size: 9px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: #111827; }
+        .label-header .inv-badge { font-size: 8px; font-weight: 700; background: #f3f4f6; color: #6b7280; padding: 2px 7px; border-radius: 20px; }
 
         .label-body {
             display: flex;
@@ -79,8 +80,8 @@
         .label-info { flex: 1; }
         .item-name   { font-size: 13px; font-weight: 800; color: #111827; text-transform: uppercase; line-height: 1.2; margin-bottom: 4px; }
         .item-code   { font-size: 11px; font-weight: 700; color: #1d4ed8; letter-spacing: 0.5px; margin-bottom: 8px; }
-        .meta-row    { display: flex; gap: 5px; margin-bottom: 3px; align-items: baseline; }
-        .meta-label  { font-size: 8px; font-weight: 700; color: #9ca3af; text-transform: uppercase; width: 44px; flex-shrink: 0; }
+        .meta-row    { display: flex; gap: 8px; margin-bottom: 5px; align-items: baseline; }
+        .meta-label  { font-size: 8px; font-weight: 700; color: #9ca3af; text-transform: uppercase; width: 55px; flex-shrink: 0; }
         .meta-value  { font-size: 10px; color: #374151; font-weight: 600; }
 
         .label-qr { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; }
@@ -133,7 +134,12 @@
         @foreach($barangs as $barang)
         <div class="label-card">
             <div class="label-header">
-                <span class="school">Inventaris Aset &mdash; Sekolah</span>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                    @if(isset($identitas) && $identitas->logo)
+                        <img src="{{ Storage::disk('public')->url('logos/' . $identitas->logo) }}" alt="Logo" style="width: 32px; height: 32px; object-fit: contain;">
+                    @endif
+                    <span class="school">{{ isset($identitas) && $identitas->nama_sekolah ? $identitas->nama_sekolah : 'Inventaris Aset &mdash; Sekolah' }}</span>
+                </div>
                 <span class="inv-badge">INVENTARIS</span>
             </div>
 
@@ -142,6 +148,10 @@
                     <div class="item-name">{{ $barang->nama_barang }}</div>
                     <div class="item-code">{{ $barang->kode_inventaris }}</div>
 
+                    <div class="meta-row">
+                        <span class="meta-label">Merk</span>
+                        <span class="meta-value">{{ $barang->merk_type ?: '-' }}</span>
+                    </div>
                     <div class="meta-row">
                         <span class="meta-label">Kategori</span>
                         <span class="meta-value">{{ $barang->kategori->nama_kategori ?? '-' }}</span>

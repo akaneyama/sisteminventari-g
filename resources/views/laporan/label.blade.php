@@ -53,12 +53,13 @@
 
         /* Header strip biru */
         .label-header {
-            background: linear-gradient(135deg, #1e40af, #3b82f6);
-            color: white;
+            background: #ffffff;
+            color: #374151;
             padding: 12px 18px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            border-bottom: 1.5px solid #f3f4f6;
         }
         .label-header .school-name {
             font-size: 11px;
@@ -69,8 +70,9 @@
         }
         .label-header .inv-badge {
             font-size: 9px;
-            font-weight: 600;
-            background: rgba(255,255,255,0.25);
+            font-weight: 700;
+            background: #f3f4f6;
+            color: #6b7280;
             padding: 2px 8px;
             border-radius: 20px;
             letter-spacing: 0.5px;
@@ -104,8 +106,8 @@
         .label-info .meta-row {
             display: flex;
             align-items: center;
-            gap: 6px;
-            margin-bottom: 4px;
+            gap: 8px;
+            margin-bottom: 6px;
         }
         .label-info .meta-label {
             font-size: 9px;
@@ -113,7 +115,7 @@
             color: #9ca3af;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            width: 48px;
+            width: 60px;
             flex-shrink: 0;
         }
         .label-info .meta-value {
@@ -207,7 +209,12 @@
     <div class="label-wrapper">
         <!-- Header -->
         <div class="label-header">
-            <div class="school-name">Inventaris Aset &mdash; Sekolah</div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                @if(isset($identitas) && $identitas->logo)
+                    <img src="{{ Storage::disk('public')->url('logos/' . $identitas->logo) }}" alt="Logo" style="width: 40px; height: 40px; object-fit: contain;">
+                @endif
+                <div class="school-name">{{ isset($identitas) && $identitas->nama_sekolah ? $identitas->nama_sekolah : 'Inventaris Aset &mdash; Sekolah' }}</div>
+            </div>
             <div class="inv-badge">INVENTARIS</div>
         </div>
 

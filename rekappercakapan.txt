@@ -1,0 +1,17 @@
+Rekap Percakapan:
+
+[2026-04-21 17:55]
+User: Halo, meminta untuk merekap setiap chat ke rekappercakapan.txt.
+Asisten: Mengiyakan dan membuat file rekappercakapan.txt untuk pertama kalinya.
+
+[2026-04-21 17:56]
+User: Meminta saran fungsi/fitur tambahan untuk role Kepala Sekolah selain membaca data dan laporan.
+Asisten: Memberikan saran terkait fitur Approval (Persetujuan), Dashboard Eksekutif, Audit/Evaluasi, dan Notifikasi Khusus.
+
+[2026-04-21 17:58]
+User: Meminta agar rincian tambahan fitur yang disarankan (Approval, Dashboard, Audit, Notifikasi) dimasukkan/didokumentasikan ke rekappercakapan.txt.
+Asisten: Memasukkan rincian fitur usulan untuk Kepala Sekolah:
+  1. Fitur Approval: Persetujuan pengajuan barang, penghapusan/pemusnahan aset rusak, dan peminjaman barang bernilai tinggi.
+  2. Dashboard Eksekutif: Grafik visualisasi kondisi barang, total nilai aset (Rupiah), dan anggaran pengeluaran.
+  3. Audit & Evaluasi: Akses untuk memberikan catatan (feedback) terhadap laporan inventaris.
+  4. Notifikasi & Peringatan: Sistem alert untuk stok menipis, barang hilang di luar kewajaran, dan peringatan masa garansi habis.

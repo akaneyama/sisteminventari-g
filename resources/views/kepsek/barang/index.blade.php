@@ -10,7 +10,7 @@
     <div class="flex gap-3">
         <button id="btnBatchLabel" type="button" onclick="submitBatchLabel()" disabled
             class="inline-flex items-center justify-center py-2.5 px-5 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-purple-600 hover:bg-purple-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200">
-            🖨️ <span class="ml-2">Cetak Label Terpilih (<span id="selectedCount">0</span>)</span>
+            <span class="ml-2">Cetak Label Terpilih (<span id="selectedCount">0</span>)</span>
         </button>
         <a href="{{ route('laporan.index') }}" class="inline-flex items-center justify-center py-2.5 px-5 rounded-xl shadow-sm text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-all">
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
@@ -112,7 +112,7 @@
                         <div class="text-xs text-gray-500">{{ $item->sumberDana->nama_sumber_dana ?? '-' }} ({{ $item->tahun_perolehan }})</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right">
-                        <a href="{{ route('kepsek.barang.label', $item->id_barang) }}" target="_blank" class="text-purple-600 hover:text-purple-900 text-sm font-medium">🖨️ Label</a>
+                        <a href="{{ route('kepsek.barang.label', $item->id_barang) }}" target="_blank" class="text-purple-600 hover:text-purple-900 text-sm font-medium">Label</a>
                     </td>
                 </tr>
                 @empty

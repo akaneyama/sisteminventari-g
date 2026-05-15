@@ -76,7 +76,8 @@ class LaporanController extends Controller
     public function printLabel($id)
     {
         $barang = Barang::with(['kategori', 'lokasi', 'supplier'])->findOrFail($id);
-        return view('laporan.label', compact('barang'));
+        $identitas = \App\Models\IdentitasSekolah::first();
+        return view('laporan.label', compact('barang', 'identitas'));
     }
 
     // Cetak Label QR Code Batch (banyak barang)
@@ -87,6 +88,7 @@ class LaporanController extends Controller
             return back()->with('error', 'Pilih minimal 1 barang untuk dicetak labelnya.');
         }
         $barangs = Barang::with(['kategori', 'lokasi'])->whereIn('id_barang', $ids)->get();
-        return view('laporan.label_batch', compact('barangs'));
+        $identitas = \App\Models\IdentitasSekolah::first();
+        return view('laporan.label_batch', compact('barangs', 'identitas'));
     }
 }

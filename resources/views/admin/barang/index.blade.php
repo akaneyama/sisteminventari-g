@@ -10,11 +10,11 @@
     <div class="flex flex-col sm:flex-row gap-3">
         <a href="{{ route('barang.create') }}" class="inline-flex items-center justify-center py-2.5 px-5 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 ease-in-out transform hover:-translate-y-0.5 w-full sm:w-auto">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-            Tambah Barang Baru
+            Buat Pengajuan Baru
         </a>
         <button id="btnBatchLabel" type="button" onclick="submitBatchLabel()" disabled
             class="inline-flex items-center justify-center py-2.5 px-5 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-purple-600 hover:bg-purple-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 w-full sm:w-auto">
-            🖨️ <span class="ml-2">Cetak Label Terpilih (<span id="selectedCount">0</span>)</span>
+           <span class="ml-2">Cetak Label Terpilih (<span id="selectedCount">0</span>)</span>
         </button>
     </div>
 </div>
@@ -131,7 +131,10 @@
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div class="flex items-center justify-end space-x-3">
                             <a href="{{ route('barang.edit', $item->id_barang) }}" class="text-indigo-600 hover:text-indigo-900">Edit</a>
-                            <a href="{{ route('barang.label', $item->id_barang) }}" target="_blank" class="text-green-600 hover:text-green-900">🖨️ Label</a>
+                            @if($item->kondisi !== 'Baik' && $item->status_approval === 'Tersedia')
+                                <a href="{{ route('perbaikan.create', ['id_barang' => $item->id_barang]) }}" class="text-yellow-600 hover:text-yellow-900 font-bold" title="Ajukan Perbaikan">Servis</a>
+                            @endif
+                            <a href="{{ route('barang.label', $item->id_barang) }}" target="_blank" class="text-green-600 hover:text-green-900">Label</a>
                             <form action="{{ route('barang.destroy', $item->id_barang) }}" method="POST" onsubmit="return confirm('Yakin ingin membuang barang ini ke recycle bin?');">
                                 @csrf
                                 @method('DELETE')
