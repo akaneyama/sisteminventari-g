@@ -31,10 +31,22 @@
 
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
-            <div>
-                <p class="text-xs text-gray-400 font-medium uppercase tracking-wider">Kode: {{ $barang->kode_inventaris ?? 'N/A' }}</p>
-                <p class="text-base font-bold text-gray-800">{{ $barang->nama_barang ?? 'Barang Tidak Ditemukan' }}</p>
-                <p class="text-xs text-gray-500 mt-0.5">Diajukan: {{ $item->created_at->translatedFormat('d F Y, H:i') }}</p>
+            <div class="flex items-center">
+                @if(isset($barang) && $barang->foto_barang)
+                    <div class="relative group cursor-pointer mr-4 flex-shrink-0" onclick="openImageModal('{{ asset('storage/' . $barang->foto_barang) }}')" title="Lihat Foto">
+                        <img class="h-12 w-12 rounded-lg object-cover border border-gray-200" src="{{ asset('storage/' . $barang->foto_barang) }}" alt="Foto">
+                        <div class="absolute inset-0 bg-gray-900/50 hidden group-hover:flex items-center justify-center rounded-lg transition-all duration-200">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                        </div>
+                    </div>
+                @else
+                    <div class="h-12 w-12 rounded-lg bg-gray-100 flex items-center justify-center mr-4 border border-gray-200 text-gray-400 text-xs font-medium">No Pic</div>
+                @endif
+                <div>
+                    <p class="text-xs text-gray-400 font-medium uppercase tracking-wider">Kode: {{ $barang->kode_inventaris ?? 'N/A' }}</p>
+                    <p class="text-base font-bold text-gray-800">{{ $barang->nama_barang ?? 'Barang Tidak Ditemukan' }}</p>
+                    <p class="text-xs text-gray-500 mt-0.5">Diajukan: {{ $item->created_at->translatedFormat('d F Y, H:i') }}</p>
+                </div>
             </div>
             <span class="px-2.5 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Menunggu Keputusan</span>
         </div>

@@ -115,6 +115,10 @@
                     <svg class="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                     Laporan Inventaris
                 </a>
+                <a href="{{ route('laporan.evaluasi.index') }}" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                    <svg class="w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                    Tabel Evaluasi
+                </a>
 
             </nav>
         </div>
@@ -169,7 +173,38 @@
 
     </main>
 
+    {{-- Global Image Modal --}}
+    <div id="globalImageModal" class="fixed inset-0 z-[60] hidden bg-gray-900/80 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="relative max-w-4xl w-full flex justify-center">
+            <button onclick="closeImageModal()" class="absolute -top-12 right-0 text-white hover:text-red-400 focus:outline-none transition-colors">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <img id="globalModalImage" src="" alt="Preview" class="max-h-[85vh] rounded-xl shadow-2xl object-contain bg-white/5">
+        </div>
+    </div>
+
     <script>
+        function openImageModal(imageSrc) {
+            const modal = document.getElementById('globalImageModal');
+            const modalImg = document.getElementById('globalModalImage');
+            modalImg.src = imageSrc;
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.remove('opacity-0'), 10);
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('globalImageModal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.getElementById('globalModalImage').src = '';
+            }, 300);
+        }
+
+        document.getElementById('globalImageModal').addEventListener('click', function(e) {
+            if (e.target === this) closeImageModal();
+        });
+
         document.addEventListener('DOMContentLoaded', function() {
             const sidebar = document.getElementById('sidebar');
             const backdrop = document.getElementById('sidebarBackdrop');

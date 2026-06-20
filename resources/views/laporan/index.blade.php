@@ -83,16 +83,25 @@
                     @endforeach
                 </select>
 
-                <input type="number" name="tahun_perolehan" value="{{ request('tahun_perolehan') }}"
-                    placeholder="Tahun Perolehan..."
-                    class="block w-full sm:w-36 px-4 py-2.5 border border-gray-200 rounded-xl bg-white text-gray-700 sm:text-sm transition duration-200">
+                <select name="tahun" class="block w-full sm:w-32 px-4 py-2.5 border border-gray-200 rounded-xl bg-white text-gray-700 sm:text-sm transition duration-200">
+                    <option value="">-- Tahun --</option>
+                    @for($y = date('Y'); $y >= date('Y') - 5; $y--)
+                        <option value="{{ $y }}" {{ request('tahun') == $y ? 'selected' : '' }}>{{ $y }}</option>
+                    @endfor
+                </select>
+
+                <select name="semester" class="block w-full sm:w-40 px-4 py-2.5 border border-gray-200 rounded-xl bg-white text-gray-700 sm:text-sm transition duration-200">
+                    <option value="">-- Semester --</option>
+                    <option value="Genap" {{ request('semester') == 'Genap' ? 'selected' : '' }}>Semester Genap (Jan-Jun)</option>
+                    <option value="Ganjil" {{ request('semester') == 'Ganjil' ? 'selected' : '' }}>Semester Ganjil (Jul-Des)</option>
+                </select>
 
                 <div class="flex items-center gap-2">
                     <button type="submit" class="inline-flex items-center py-2.5 px-5 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-gray-800 hover:bg-gray-900 transition-all duration-200">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
                         Filter
                     </button>
-                    @if(request()->hasAny(['id_lokasi','kondisi','id_kategori','id_sumber_dana','tahun_perolehan']))
+                    @if(request()->hasAny(['id_lokasi','kondisi','id_kategori','id_sumber_dana','tahun','semester']))
                         <a href="{{ route('laporan.index') }}" class="inline-flex items-center py-2.5 px-4 text-sm font-medium text-gray-500 hover:text-red-600 bg-white border border-gray-200 hover:border-red-200 hover:bg-red-50 rounded-xl transition-all duration-200" title="Reset Filter">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                         </a>
@@ -136,8 +145,17 @@
                     <td class="px-5 py-4 whitespace-nowrap text-xs text-gray-400">{{ $loop->iteration }}</td>
                     <td class="px-5 py-4 whitespace-nowrap text-sm font-bold text-blue-700">{{ $item->kode_inventaris }}</td>
                     <td class="px-5 py-4">
-                        <div class="text-sm font-semibold text-gray-900">{{ $item->nama_barang }}</div>
-                        <div class="text-xs text-gray-500 mt-0.5">{{ $item->merk_type }}</div>
+                        <div class="flex items-center">
+                            @if($item->foto_barang)
+                                <img class="h-10 w-10 rounded-lg object-cover mr-3 border border-gray-200" src="{{ asset('storage/' . $item->foto_barang) }}" alt="Foto">
+                            @else
+                                <div class="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center mr-3 border border-gray-200 text-gray-400 text-xs font-medium">No Pic</div>
+                            @endif
+                            <div>
+                                <div class="text-sm font-semibold text-gray-900">{{ $item->nama_barang }}</div>
+                                <div class="text-xs text-gray-500 mt-0.5">{{ $item->merk_type }}</div>
+                            </div>
+                        </div>
                     </td>
                     <td class="px-5 py-4 whitespace-nowrap text-sm text-gray-600">{{ $item->kategori->nama_kategori ?? '-' }}</td>
                     <td class="px-5 py-4 whitespace-nowrap text-sm text-gray-600">{{ $item->lokasi->nama_ruangan ?? '-' }}</td>
@@ -196,9 +214,24 @@
 
     <form action="{{ route('laporan.evaluasi.store') }}" method="POST">
         @csrf
-        <div class="mb-4">
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Periode Evaluasi <span class="text-red-500">*</span></label>
-            <input type="text" name="periode" placeholder="Contoh: Semester 1 Tahun Ajaran 2026/2027" required class="block w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-blue-500 focus:border-blue-500 text-sm transition-colors">
+        <div class="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Tahun Evaluasi <span class="text-red-500">*</span></label>
+                <select name="tahun_evaluasi" required class="block w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-blue-500 focus:border-blue-500 text-sm transition-colors">
+                    <option value="">-- Pilih Tahun --</option>
+                    @for($y = date('Y'); $y >= date('Y') - 5; $y--)
+                        <option value="{{ $y }}">{{ $y }}</option>
+                    @endfor
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Semester Evaluasi <span class="text-red-500">*</span></label>
+                <select name="semester_evaluasi" required class="block w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-blue-500 focus:border-blue-500 text-sm transition-colors">
+                    <option value="">-- Pilih Semester --</option>
+                    <option value="Semester Genap">Semester Genap</option>
+                    <option value="Semester Ganjil">Semester Ganjil</option>
+                </select>
+            </div>
         </div>
         <div class="mb-4">
             <label class="block text-sm font-semibold text-gray-700 mb-2">Catatan / Instruksi <span class="text-red-500">*</span></label>

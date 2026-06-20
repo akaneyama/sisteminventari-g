@@ -15,25 +15,13 @@ class LaporanController extends Controller
 {
     public function index(Request $request)
     {
-        $filter = $request->only(['id_lokasi', 'kondisi', 'id_kategori', 'id_sumber_dana', 'tahun_perolehan']);
+        $filter = $request->only(['id_lokasi', 'kondisi', 'id_kategori', 'id_sumber_dana', 'tahun', 'semester']);
 
-        $query = Barang::with(['kategori', 'lokasi', 'sumberDana', 'supplier']);
-        if (!empty($filter['id_lokasi']))      $query->where('id_lokasi', $filter['id_lokasi']);
-        if (!empty($filter['kondisi']))         $query->where('kondisi', $filter['kondisi']);
-        if (!empty($filter['id_kategori']))     $query->where('id_kategori', $filter['id_kategori']);
-        if (!empty($filter['id_sumber_dana']))  $query->where('id_sumber_dana_new', $filter['id_sumber_dana']);
-        if (!empty($filter['tahun_perolehan'])) $query->where('tahun_perolehan', $filter['tahun_perolehan']);
-
+        $laporanService = new \App\Services\LaporanService();
+        $query = $laporanService->getBarangLaporan($filter);
         $barang = $query->latest()->get();
 
-        // Statistik ringkasan
-        $stats = [
-            'total_jenis'   => $barang->count(),
-            'total_unit'    => $barang->sum('jumlah_barang'),
-            'kondisi_baik'  => $barang->where('kondisi', 'Baik')->sum('jumlah_barang'),
-            'rusak_ringan'  => $barang->where('kondisi', 'Rusak Ringan')->sum('jumlah_barang'),
-            'rusak_berat'   => $barang->where('kondisi', 'Rusak Berat')->sum('jumlah_barang'),
-        ];
+        $stats = $laporanService->getStats($barang);
 
         $lokasi     = Lokasi::all();
         $kategori   = Kategori::all();
@@ -44,29 +32,19 @@ class LaporanController extends Controller
 
     public function exportExcel(Request $request)
     {
-        $filter = $request->only(['id_lokasi', 'kondisi', 'id_kategori', 'id_sumber_dana']);
+        $filter = $request->only(['id_lokasi', 'kondisi', 'id_kategori', 'id_sumber_dana', 'tahun', 'semester']);
         return Excel::download(new BarangExport($filter), 'Laporan_Inventaris_'.date('Ymd').'.xlsx');
     }
 
     public function exportPdf(Request $request)
     {
-        $filter = $request->only(['id_lokasi', 'kondisi', 'id_kategori', 'id_sumber_dana', 'tahun_perolehan']);
-        $query  = Barang::with(['kategori', 'lokasi', 'sumberDana', 'supplier']);
-        if (!empty($filter['id_lokasi']))      $query->where('id_lokasi', $filter['id_lokasi']);
-        if (!empty($filter['kondisi']))         $query->where('kondisi', $filter['kondisi']);
-        if (!empty($filter['id_kategori']))     $query->where('id_kategori', $filter['id_kategori']);
-        if (!empty($filter['id_sumber_dana']))  $query->where('id_sumber_dana_new', $filter['id_sumber_dana']);
-        if (!empty($filter['tahun_perolehan'])) $query->where('tahun_perolehan', $filter['tahun_perolehan']);
-
+        $filter = $request->only(['id_lokasi', 'kondisi', 'id_kategori', 'id_sumber_dana', 'tahun', 'semester']);
+        
+        $laporanService = new \App\Services\LaporanService();
+        $query = $laporanService->getBarangLaporan($filter);
         $barang = $query->get();
 
-        $stats = [
-            'total_jenis'   => $barang->count(),
-            'total_unit'    => $barang->sum('jumlah_barang'),
-            'kondisi_baik'  => $barang->where('kondisi', 'Baik')->sum('jumlah_barang'),
-            'rusak_ringan'  => $barang->where('kondisi', 'Rusak Ringan')->sum('jumlah_barang'),
-            'rusak_berat'   => $barang->where('kondisi', 'Rusak Berat')->sum('jumlah_barang'),
-        ];
+        $stats = $laporanService->getStats($barang);
 
         $pdf = Pdf::loadView('laporan.pdf', compact('barang', 'stats', 'filter'))->setPaper('a4', 'landscape');
         return $pdf->download('Laporan_Inventaris_'.date('Ymd').'.pdf');

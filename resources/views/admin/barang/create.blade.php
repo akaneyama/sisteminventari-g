@@ -129,8 +129,12 @@
                 
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Foto Barang <span class="text-gray-400 font-normal">(Opsional)</span></label>
-                    <input type="file" name="foto_barang" accept="image/*" 
+                    <input type="file" name="foto_barang" accept="image/*" onchange="previewImage(event)"
                         class="block w-full text-sm text-gray-500 border border-gray-200 rounded-xl bg-gray-50 hover:bg-white focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition duration-200 ease-in-out file:mr-4 file:py-3 file:px-4 file:rounded-l-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
+                    <div class="mt-4 hidden" id="preview-container">
+                        <p class="text-xs text-gray-500 mb-2">Preview Foto:</p>
+                        <img id="image-preview" src="#" alt="Preview" class="h-32 w-32 object-cover rounded-xl border border-gray-200 shadow-sm">
+                    </div>
                 </div>
             </div>
         </div>
@@ -148,4 +152,27 @@
         </div>
     </form>
 </div>
+
+@push('scripts')
+<script>
+    function previewImage(event) {
+        var input = event.target;
+        var previewContainer = document.getElementById('preview-container');
+        var previewImage = document.getElementById('image-preview');
+        
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            
+            reader.onload = function(e) {
+                previewImage.src = e.target.result;
+                previewContainer.classList.remove('hidden');
+            }
+            
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            previewContainer.classList.add('hidden');
+        }
+    }
+</script>
+@endpush
 @endsection

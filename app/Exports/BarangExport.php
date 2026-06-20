@@ -29,13 +29,8 @@ class BarangExport implements FromCollection, WithHeadings, WithMapping, ShouldA
 
     public function collection()
     {
-        $query = Barang::with(['kategori', 'lokasi', 'sumberDana', 'supplier']);
-
-        if (!empty($this->filter['id_lokasi']))     $query->where('id_lokasi', $this->filter['id_lokasi']);
-        if (!empty($this->filter['kondisi']))        $query->where('kondisi', $this->filter['kondisi']);
-        if (!empty($this->filter['id_kategori']))    $query->where('id_kategori', $this->filter['id_kategori']);
-        if (!empty($this->filter['id_sumber_dana'])) $query->where('id_sumber_dana_new', $this->filter['id_sumber_dana']);
-        if (!empty($this->filter['tahun_perolehan'])) $query->where('tahun_perolehan', $this->filter['tahun_perolehan']);
+        $laporanService = new \App\Services\LaporanService();
+        $query = $laporanService->getBarangLaporan($this->filter);
 
         return $query->latest()->get();
     }

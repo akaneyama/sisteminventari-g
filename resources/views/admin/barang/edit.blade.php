@@ -119,15 +119,22 @@
                 
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Update Foto <span class="text-gray-400 font-normal">(Biarkan kosong jika tidak diganti)</span></label>
-                    <input type="file" name="foto_barang" accept="image/*" 
+                    <input type="file" name="foto_barang" accept="image/*" onchange="previewImage(event)"
                         class="block w-full text-sm text-gray-500 border border-gray-200 rounded-xl bg-gray-50 hover:bg-white focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition duration-200 ease-in-out file:mr-4 file:py-3 file:px-4 file:rounded-l-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
                     
-                    @if($barang->foto_barang)
-                        <div class="mt-3 inline-flex items-center px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 text-xs font-medium">
-                            <svg class="w-4 h-4 mr-1.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
-                            Foto saat ini sudah tersimpan
+                    <div class="mt-4 flex flex-col gap-2">
+                        @if($barang->foto_barang)
+                            <div id="current-photo" class="inline-flex items-center px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 text-xs font-medium w-fit">
+                                <svg class="w-4 h-4 mr-1.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
+                                Foto saat ini sudah tersimpan
+                            </div>
+                            <img src="{{ asset('storage/' . $barang->foto_barang) }}" alt="Current Photo" class="h-32 w-32 object-cover rounded-xl border border-gray-200 shadow-sm" id="existing-image">
+                        @endif
+                        <div class="hidden" id="preview-container">
+                            <p class="text-xs text-gray-500 mb-2">Preview Foto Baru:</p>
+                            <img id="image-preview" src="#" alt="Preview" class="h-32 w-32 object-cover rounded-xl border border-gray-200 shadow-sm">
                         </div>
-                    @endif
+                    </div>
                 </div>
             </div>
         </div>
@@ -144,4 +151,33 @@
         </div>
     </form>
 </div>
+
+@push('scripts')
+<script>
+    function previewImage(event) {
+        var input = event.target;
+        var previewContainer = document.getElementById('preview-container');
+        var previewImage = document.getElementById('image-preview');
+        var existingImage = document.getElementById('existing-image');
+        var currentPhotoLabel = document.getElementById('current-photo');
+        
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            
+            reader.onload = function(e) {
+                previewImage.src = e.target.result;
+                previewContainer.classList.remove('hidden');
+                if(existingImage) existingImage.classList.add('hidden');
+                if(currentPhotoLabel) currentPhotoLabel.classList.add('hidden');
+            }
+            
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            previewContainer.classList.add('hidden');
+            if(existingImage) existingImage.classList.remove('hidden');
+            if(currentPhotoLabel) currentPhotoLabel.classList.remove('hidden');
+        }
+    }
+</script>
+@endpush
 @endsection

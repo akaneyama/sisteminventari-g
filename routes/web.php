@@ -62,6 +62,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/barang/label/batch', [LaporanController::class, 'printLabelBatch'])->name('barang.label.batch');
 
         // Evaluasi Laporan
+        Route::get('evaluasi', [\App\Http\Controllers\EvaluasiController::class, 'index'])->name('admin.evaluasi.index');
         Route::patch('evaluasi/{id}/read', [\App\Http\Controllers\EvaluasiController::class, 'markAsRead'])->name('admin.evaluasi.read');
 
         // Perbaikan Aset (Maintenance)
@@ -125,6 +126,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/excel', [LaporanController::class, 'exportExcel'])->name('laporan.excel');
         Route::get('/pdf', [LaporanController::class, 'exportPdf'])->name('laporan.pdf');
         
+        // Tabel Evaluasi, Excel, dan PDF
+        Route::get('/evaluasi/data', [\App\Http\Controllers\EvaluasiController::class, 'index'])->name('laporan.evaluasi.index');
+        Route::get('/evaluasi/excel', [\App\Http\Controllers\EvaluasiController::class, 'exportExcel'])->name('laporan.evaluasi.excel');
+        Route::get('/evaluasi/pdf', [\App\Http\Controllers\EvaluasiController::class, 'exportPdf'])->name('laporan.evaluasi.pdf');
+
         // Simpan Evaluasi Laporan
         Route::post('/evaluasi', [\App\Http\Controllers\EvaluasiController::class, 'store'])->name('laporan.evaluasi.store');
     });
