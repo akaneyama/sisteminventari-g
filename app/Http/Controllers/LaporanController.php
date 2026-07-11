@@ -70,3 +70,5 @@ class LaporanController extends Controller
         return view('laporan.label_batch', compact('barangs', 'identitas'));
     }
 }
+
+

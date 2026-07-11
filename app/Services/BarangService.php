@@ -40,7 +40,8 @@ class BarangService
     {
         // Handle upload foto jika ada
         if (isset($data['foto_barang'])) {
-            $data['foto_barang'] = $data['foto_barang']->store('barang_fotos', 'public');
+            $data['foto_barang'] = $data['foto_barang']->
+            store('barang_fotos', 'public');
         }
 
         $data['status_approval'] = 'Menunggu Pengadaan';

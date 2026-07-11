@@ -1,0 +1,58 @@
+#### Segmen Program 4.13 Mekanisme Usulan dan Persetujuan Penghapusan Barang (`BarangService.php`)
+Fitur penghapusan barang pada sistem ini tidak serta-merta langsung menghapus data dari basis data. Untuk mencegah kehilangan aset yang tidak disengaja atau penghapusan tanpa sepengetahuan pimpinan, sistem menerapkan alur persetujuan (approval) yang melibatkan Admin dan Kepala Sekolah. Berikut adalah alur cerita dari fitur ini beserta potongan kode pentingnya:
+
+**1. Fitur Pengajuan Penghapusan (Admin)**
+Saat Admin menyadari ada barang yang sudah tidak layak pakai atau hilang dan menekan tombol hapus, sistem akan menjalankan fungsi `requestDelete`. Fungsi ini tidak menghapus data, melainkan hanya mengunci status barang tersebut agar hilang dari buku inventaris aktif dan masuk ke antrean persetujuan.
+
+```php
+    public function requestDelete($id)
+    {
+        $barang = Barang::findOrFail($id);
+        
+        // Mengubah status operasional menjadi pengajuan hapus
+        $barang->status_approval = 'Menunggu Penghapusan';
+        $barang->save();
+        
+        return $barang;
+    }
+```
+**Penjelasan:** Pada baris kode di atas, sistem mencari barang berdasarkan ID. Setelah ditemukan, nilai kolom `status_approval` diubah menjadi `'Menunggu Penghapusan'`. Ini berfungsi sebagai penanda bagi Kepala Sekolah bahwa barang ini sedang diusulkan untuk dihapus.
+
+---
+
+**2. Fitur Persetujuan Penghapusan (Kepala Sekolah)**
+Setelah usulan masuk ke dasbor Kepala Sekolah, beliau dapat meninjau barang tersebut. Jika Kepala Sekolah menekan tombol "Setujui", sistem akan menjalankan fungsi `approveDelete`. Fungsi ini akan melakukan penghapusan secara aman menggunakan mekanisme *Soft Delete*.
+
+```php
+    public function approveDelete($id)
+    {
+        $barang = Barang::findOrFail($id);
+        
+        // Mengembalikan status operasional menjadi normal (Tersedia)
+        $barang->status_approval = 'Tersedia'; 
+        $barang->save();
+        
+        // Mengeksekusi fitur penghapusan sementara (Soft Delete)
+        return $barang->delete();
+    }
+```
+**Penjelasan:** Sebelum sistem mengeksekusi perintah `$barang->delete()`, kolom `status_approval` sengaja dikembalikan terlebih dahulu menjadi `'Tersedia'`. Tujuannya adalah sebagai langkah pencegahan; apabila suatu saat data barang ini perlu dipulihkan (*restore*) dari tong sampah (*recycle bin*) database, barang tersebut akan langsung berstatus aktif dan siap digunakan lagi tanpa menyisakan status pengajuan. Fungsi `delete()` sendiri tidak menghilangkan data secara permanen, melainkan hanya menyembunyikannya dari sistem utama (Soft Delete) demi menjaga riwayat transaksi.
+
+---
+
+**3. Fitur Penolakan Penghapusan (Kepala Sekolah)**
+Jika Kepala Sekolah merasa barang tersebut masih layak dan menolak usulan penghapusan dari Admin, beliau dapat menekan tombol tolak. Sistem kemudian memanggil fungsi `rejectDelete`.
+
+```php
+    public function rejectDelete($id)
+    {
+        $barang = Barang::findOrFail($id);
+        
+        // Membatalkan penghapusan dan mengembalikan status barang
+        $barang->status_approval = 'Tersedia';
+        $barang->save();
+        
+        return $barang;
+    }
+```
+**Penjelasan:** Fungsi ini sangat sederhana karena sistem hanya perlu mengubah kembali kolom `status_approval` dari `'Menunggu Penghapusan'` kembali ke status normalnya yaitu `'Tersedia'`. Dengan begitu, barang secara otomatis akan muncul kembali di buku inventaris Admin seperti semula tanpa ada data yang terhapus.
