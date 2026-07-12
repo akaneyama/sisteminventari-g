@@ -42,9 +42,14 @@ class ApprovalController extends Controller
         return view('kepsek.approval.pengadaan', compact('pengadaans'));
     }
 
-    public function approvePengadaan($id)
+    public function approvePengadaan(Request $request, $id)
     {
-        $this->barangService->approvePengadaan($id);
+        $request->validate([
+            'jumlah_disetujui' => 'required|integer|min:1',
+            'alasan_penolakan' => 'nullable|string|max:500'
+        ]);
+
+        $this->barangService->approvePengadaan($id, $request->jumlah_disetujui, $request->alasan_penolakan);
         return redirect()->route('kepsek.approval.pengadaan')->with('success', 'Pengajuan pengadaan berhasil disetujui. Barang telah dimasukkan ke dalam sistem.');
     }
 

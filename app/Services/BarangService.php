@@ -13,7 +13,7 @@ class BarangService
         $query = Barang::with(['kategori', 'lokasi', 'supplier', 'sumberDana']);
 
         if ($excludePendingDelete) {
-            $query->where('status_approval', 'Tersedia');
+            $query->whereIn('status_approval', ['Tersedia', 'Dalam Perbaikan']);
         }
 
         if (!empty($filter['search'])) {
@@ -45,6 +45,7 @@ class BarangService
         }
 
         $data['status_approval'] = 'Menunggu Pengadaan';
+        $data['jumlah_diajukan'] = $data['jumlah_barang'] ?? 0;
 
         return Barang::create($data);
     }
@@ -111,12 +112,20 @@ class BarangService
         return $barang;
     }
 
-    public function getPengadaanStatus()
+    public function getPengadaanStatus($tab = 'aktif')
     {
-        return Barang::with(['kategori', 'lokasi'])
-            ->whereIn('status_approval', ['Menunggu Pengadaan', 'Pengadaan Ditolak'])
-            ->latest()
-            ->get();
+        $query = Barang::with(['kategori', 'lokasi']);
+        
+        if ($tab === 'aktif') {
+            $query->whereIn('status_approval', ['Menunggu Pengadaan', 'Pengadaan Disetujui']);
+        } elseif ($tab === 'ditolak') {
+            $query->where('status_approval', 'Pengadaan Ditolak');
+        } else {
+            // Tab 'semua' juga menampilkan barang yang sudah selesai (Tersedia)
+            $query->whereIn('status_approval', ['Menunggu Pengadaan', 'Pengadaan Disetujui', 'Pengadaan Ditolak', 'Tersedia', 'Dalam Perbaikan']);
+        }
+        
+        return $query->latest()->get();
     }
 
     public function getPendingPengadaan()
@@ -127,11 +136,25 @@ class BarangService
             ->get();
     }
 
-    public function approvePengadaan($id)
+    public function approvePengadaan($id, $jumlah_disetujui, $alasan = null)
     {
         $barang = Barang::findOrFail($id);
+        $barang->status_approval = 'Pengadaan Disetujui';
+        $barang->jumlah_barang = $jumlah_disetujui;
+        $barang->alasan_penolakan = $alasan;
+        $barang->save();
+        return $barang;
+    }
+
+    public function terimaPengadaan($id, $fileBukti = null)
+    {
+        $barang = Barang::findOrFail($id);
+        
+        if ($fileBukti) {
+            $barang->bukti_nota = $fileBukti->store('bukti_penerimaan', 'public');
+        }
+
         $barang->status_approval = 'Tersedia';
-        $barang->alasan_penolakan = null;
         $barang->save();
         return $barang;
     }

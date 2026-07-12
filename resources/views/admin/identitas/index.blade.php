@@ -34,7 +34,7 @@
                             </div>
                         @endif
                         <p class="text-xs text-gray-500 text-center mb-3">Format: JPG, PNG, JPEG. Max: 2MB.</p>
-                        <input type="file" name="logo_file" id="logo_file" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer transition-colors" accept="image/*">
+                        <input type="file" name="logo_file" id="logo_file" onchange="validateLogo(this)" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer transition-colors" accept="image/*">
                         @error('logo_file')
                             <p class="mt-2 text-xs text-red-600 font-medium">{{ $message }}</p>
                         @enderror
@@ -44,6 +44,11 @@
                 <!-- Kolom Kanan: Form Data -->
                 <div class="lg:col-span-2 space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="md:col-span-2">
+                            <label for="naungan" class="block text-sm font-semibold text-gray-700 mb-1">Institusi / Naungan <span class="text-gray-400 text-xs font-normal">(Opsional)</span></label>
+                            <input type="text" name="naungan" id="naungan" value="{{ old('naungan', $identitas->naungan ?? '') }}" class="w-full rounded-xl border-gray-200 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm py-2.5 px-3 border transition-colors @error('naungan') border-red-300 ring-red-500 @enderror" placeholder="Contoh: PEMERINTAH PROVINSI X / YAYASAN XYZ">
+                            @error('naungan')<p class="mt-1 text-xs text-red-600 font-medium">{{ $message }}</p>@enderror
+                        </div>
                         <div class="md:col-span-2">
                             <label for="nama_sekolah" class="block text-sm font-semibold text-gray-700 mb-1">Nama Sekolah <span class="text-red-500">*</span></label>
                             <input type="text" name="nama_sekolah" id="nama_sekolah" value="{{ old('nama_sekolah', $identitas->nama_sekolah ?? '') }}" class="w-full rounded-xl border-gray-200 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm py-2.5 px-3 border transition-colors @error('nama_sekolah') border-red-300 ring-red-500 @enderror" required placeholder="Contoh: SMA Negeri 1 Contoh">
@@ -98,4 +103,15 @@
         </form>
     </div>
 </div>
+
+<script>
+    function validateLogo(input) {
+        if (input.files && input.files[0]) {
+            if (input.files[0].size > 2097152) { // 2MB
+                alert('Ukuran foto logo tidak boleh lebih dari 2MB!');
+                input.value = '';
+            }
+        }
+    }
+</script>
 @endsection

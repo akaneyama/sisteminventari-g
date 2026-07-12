@@ -14,9 +14,35 @@ class PengajuanController extends Controller
         $this->barangService = $barangService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $pengajuans = $this->barangService->getPengadaanStatus();
-        return view('admin.pengajuan.index', compact('pengajuans'));
+        $tab = $request->get('tab', 'aktif');
+        $pengajuans = $this->barangService->getPengadaanStatus($tab);
+        return view('admin.pengajuan.index', compact('pengajuans', 'tab'));
+    }
+
+    public function terimaBarang(Request $request, $id)
+    {
+        $request->validate([
+            'bukti_nota' => 'nullable|image|max:2048'
+        ]);
+
+        $this->barangService->terimaPengadaan($id, $request->file('bukti_nota'));
+        return redirect()->route('admin.pengajuan.index')->with('success', 'Penerimaan barang berhasil dikonfirmasi beserta buktinya. Barang telah masuk ke inventaris aktif.');
+    }
+
+    public function cetakPO($id)
+    {
+        $barang = \App\Models\Barang::with('supplier')->findOrFail($id);
+        $identitas = \App\Models\IdentitasSekolah::first();
+        
+        if (!$identitas) {
+            return redirect()->back()->with('error', 'Data Identitas Sekolah belum diatur. Silakan atur terlebih dahulu di menu pengaturan.');
+        }
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.pengajuan.surat_po_pdf', compact('barang', 'identitas'));
+        $pdf->setPaper('A4', 'portrait');
+        
+        return $pdf->stream('Surat_Pesanan_PO_' . $barang->kode_inventaris . '.pdf');
     }
 }

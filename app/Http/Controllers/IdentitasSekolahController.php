@@ -23,6 +23,7 @@ class IdentitasSekolahController extends Controller
     public function update(Request $request)
     {
         $data = $request->validate([
+            'naungan' => 'nullable|string|max:255',
             'nama_sekolah' => 'required|string|max:255',
             'alamat' => 'required|string',
             'email' => 'nullable|email|max:255',

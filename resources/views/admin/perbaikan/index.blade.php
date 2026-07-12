@@ -3,9 +3,19 @@
 
 @section('content')
 <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-    <div>
+    <div class="flex-1">
         <h2 class="text-2xl font-bold text-gray-800 tracking-tight">Perbaikan Aset (Maintenance)</h2>
         <p class="text-sm text-gray-500 mt-1">Kelola barang yang sedang dalam masa perbaikan (servis).</p>
+    </div>
+    <div class="w-full sm:w-auto">
+        <form method="GET" action="{{ route('perbaikan.index') }}" class="flex items-center gap-2">
+            <select name="status" onchange="this.form.submit()" class="block w-full sm:w-auto px-4 py-2 border border-gray-200 rounded-xl bg-white text-sm text-gray-700 focus:ring-blue-500 focus:border-blue-500">
+                <option value="">Semua Status</option>
+                <option value="Proses" {{ request('status') == 'Proses' ? 'selected' : '' }}>Dalam Perbaikan</option>
+                <option value="Selesai Berhasil" {{ request('status') == 'Selesai Berhasil' ? 'selected' : '' }}>Selesai Berhasil</option>
+                <option value="Selesai Gagal" {{ request('status') == 'Selesai Gagal' ? 'selected' : '' }}>Selesai Gagal</option>
+            </select>
+        </form>
     </div>
 </div>
 
@@ -51,9 +61,21 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         @if($p->status_perbaikan == 'Proses')
-                            <button onclick="bukaModalSelesai({{ $p->id_perbaikan }}, '{{ $p->barang->nama_barang }}')" class="text-white bg-green-600 hover:bg-green-700 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors">Selesaikan</button>
+                            <button onclick="bukaModalSelesai({{ $p->id_perbaikan }}, '{{ addslashes($p->barang->nama_barang) }}')" class="text-white bg-green-600 hover:bg-green-700 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors">Selesaikan</button>
                         @else
                             <span class="text-gray-400 text-xs">Selesai pada {{ \Carbon\Carbon::parse($p->tanggal_selesai)->format('d M Y') }}<br>Rp {{ number_format($p->biaya, 0, ',', '.') }}</span>
+                            <div class="flex justify-end mt-1 gap-2">
+                                @if($p->nota_perbaikan)
+                                    <a href="{{ asset('storage/' . $p->nota_perbaikan) }}" target="_blank" class="text-blue-600 hover:text-blue-800 text-xs font-bold inline-flex items-center">
+                                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                        Nota Asli
+                                    </a>
+                                @endif
+                                <a href="{{ route('perbaikan.cetak', $p->id_perbaikan) }}" target="_blank" class="text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded-md text-xs font-semibold inline-flex items-center transition-colors">
+                                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                                    Cetak Bukti
+                                </a>
+                            </div>
                         @endif
                     </td>
                 </tr>
@@ -72,7 +94,7 @@
 {{-- Modal Selesai Servis --}}
 <div id="modalSelesai" class="fixed inset-0 z-50 hidden bg-gray-900/50 backdrop-blur-sm flex items-center justify-center">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 overflow-hidden">
-        <form id="formSelesai" method="POST">
+        <form id="formSelesai" method="POST" enctype="multipart/form-data">
             @csrf @method('PATCH')
             <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
                 <h3 class="text-lg font-bold text-gray-800">Selesaikan Perbaikan</h3>
@@ -102,6 +124,12 @@
                 <div class="mb-4">
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Biaya Servis (Rp)</label>
                     <input type="number" name="biaya" value="0" min="0" required class="block w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-gray-50">
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Upload Nota/Bukti <span class="text-gray-400 font-normal">(Opsional, Max 2MB)</span></label>
+                    <input type="file" name="nota_perbaikan" accept="image/*,.pdf" 
+                        class="block w-full text-sm text-gray-500 border border-gray-200 rounded-xl bg-gray-50 hover:bg-white focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition duration-200 ease-in-out file:mr-4 file:py-2.5 file:px-4 file:rounded-l-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
                 </div>
                 
                 <div id="pesanGagal" class="hidden p-3 bg-red-50 text-red-600 text-xs rounded-lg mt-2 font-medium">

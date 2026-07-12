@@ -71,7 +71,7 @@
                     <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider w-24">Jumlah</th>
                     <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Jenis Mutasi</th>
                     <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Detail Perubahan</th>
-                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Admin</th>
+                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Status & Aksi</th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-100">
@@ -79,6 +79,7 @@
                 <tr class="hover:bg-gray-50/50 transition-colors">
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
                         {{ \Carbon\Carbon::parse($item->tanggal_mutasi)->format('d/m/Y') }}
+                        <div class="text-xs text-gray-400 mt-1">Oleh: {{ $item->user->nama_lengkap ?? '-' }}</div>
                     </td>
                     <td class="px-6 py-4 text-sm">
                         <div class="font-bold text-blue-600">{{ $item->barang->kode_inventaris ?? 'N/A' }}</div>
@@ -98,18 +99,33 @@
                     </td>
                     <td class="px-6 py-4 text-sm text-gray-700 leading-relaxed">
                         @if($item->jenis_mutasi == 'Pindah Lokasi')
-                            <span class="text-gray-500">Dari</span> <span class="font-semibold">{{ $item->lokasiAsal->nama_ruangan ?? '-' }}</span> <br>
-                            <span class="text-gray-500">Ke</span> <span class="font-semibold text-blue-600">{{ $item->lokasiTujuan->nama_ruangan ?? '-' }}</span>
+                            <span class="text-gray-500">Dari:</span> <span class="font-semibold">{{ $item->lokasiAsal->nama_ruangan ?? '-' }}</span> <br>
+                            <span class="text-gray-500">Ke:</span> <span class="font-semibold text-blue-600">{{ $item->lokasiTujuan->nama_ruangan ?? '-' }}</span>
                         @elseif($item->jenis_mutasi == 'Ubah Status')
-                            <span class="text-gray-500">Dari</span> <span class="font-semibold">{{ $item->kondisi_sebelum }}</span> <br>
-                            <span class="text-gray-500">Menjadi</span> <span class="font-semibold text-yellow-600">{{ $item->kondisi_sesudah }}</span>
+                            <span class="text-gray-500">Dari:</span> <span class="font-semibold">{{ $item->kondisi_sebelum }}</span> <br>
+                            <span class="text-gray-500">Menjadi:</span> <span class="font-semibold text-yellow-600">{{ $item->kondisi_sesudah }}</span>
                         @else
                             <span class="italic text-gray-500">{{ $item->keterangan }}</span>
                         @endif
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 flex items-center mt-2">
-                        <svg class="w-4 h-4 mr-1.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                        {{ $item->user->nama_lengkap ?? '-' }}
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex flex-col gap-2 items-start">
+                            @if($item->status == 'Menunggu')
+                                <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Menunggu Kepsek</span>
+                            @elseif($item->status == 'Disetujui')
+                                <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Disetujui</span>
+                            @elseif($item->status == 'Ditolak')
+                                <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Ditolak</span>
+                                <span class="text-xs text-red-500 mt-1 whitespace-normal max-w-xs">{{ $item->alasan_penolakan }}</span>
+                            @endif
+                            
+                            @if($item->status == 'Disetujui' && in_array($item->jenis_mutasi, ['Pindah Lokasi', 'Penghapusan']))
+                                <a href="{{ route('admin.mutasi.cetak_bast', $item->id_mutasi) }}" target="_blank" class="inline-flex items-center px-3 py-1.5 bg-gray-600 text-white hover:bg-gray-700 rounded-lg text-xs font-bold transition-colors shadow-sm mt-1">
+                                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                                    Cetak BAST
+                                </a>
+                            @endif
+                        </div>
                     </td>
                 </tr>
                 @empty

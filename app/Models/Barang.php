@@ -24,7 +24,9 @@ class Barang extends Model
         'id_sumber_dana_new',
         'id_supplier',
         'jumlah_barang',
+        'jumlah_diajukan',
         'foto_barang',
+        'bukti_nota',
         'status_approval',
         'alasan_penolakan',
     ];

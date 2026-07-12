@@ -51,9 +51,10 @@
             
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Jumlah Dimutasi <span class="text-red-500">*</span></label>
-                <input type="number" name="jumlah" id="jumlah" min="1" value="1" required 
+                <input type="number" name="jumlah" id="jumlah" min="1" value="1" required oninput="validateJumlahLive()"
                     class="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 bg-gray-50 hover:bg-white text-gray-900 sm:text-sm transition duration-200 ease-in-out">
                 <p class="text-xs text-gray-500 mt-1" id="max_jumlah_info">Pilih barang untuk melihat limit maksimal mutasi.</p>
+                <p class="text-xs text-red-600 mt-1 hidden font-semibold" id="jumlah_error"></p>
             </div>
         </div>
 
@@ -81,13 +82,23 @@
 
         <div id="field_status" class="hidden bg-yellow-50/50 p-5 rounded-xl border border-yellow-100 transition-all">
             <label class="block text-sm font-semibold text-yellow-900 mb-2">Kondisi Baru (Sesudah) <span class="text-red-500">*</span></label>
-            <select name="kondisi_sesudah" id="kondisi_sesudah" 
+            <select name="kondisi_sesudah" id="kondisi_sesudah" onchange="toggleServisOption()"
                 class="block w-full px-4 py-3 border border-yellow-200 rounded-xl focus:ring-yellow-500 focus:border-yellow-500 bg-white text-gray-900 sm:text-sm transition duration-200 ease-in-out">
                 <option value="">-- Set Kondisi Baru --</option>
                 <option value="Baik">Baik</option>
                 <option value="Rusak Ringan">Rusak Ringan</option>
                 <option value="Rusak Berat">Rusak Berat</option>
             </select>
+
+            <div id="opsi_servis" class="mt-4 hidden items-start p-3 bg-white border border-yellow-200 rounded-lg">
+                <div class="flex items-center h-5">
+                    <input id="ajukan_servis" name="ajukan_servis" value="1" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 cursor-pointer">
+                </div>
+                <div class="ml-3 text-sm">
+                    <label for="ajukan_servis" class="font-medium text-gray-700 cursor-pointer">Ajukan ke Servis / Perbaikan?</label>
+                    <p class="text-xs text-gray-500 mt-0.5">Centang jika barang ini akan langsung dimasukkan ke daftar antrean perbaikan (Maintenance).</p>
+                </div>
+            </div>
         </div>
 
         <div>
@@ -101,8 +112,8 @@
                 class="w-full sm:w-auto py-2.5 px-5 text-center border border-gray-200 rounded-xl text-sm font-semibold text-gray-700 bg-white hover:bg-gray-50 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-all duration-200">
                 Batal
             </a>
-            <button type="submit" 
-                class="w-full sm:w-auto py-2.5 px-6 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 ease-in-out transform hover:-translate-y-0.5">
+            <button type="submit" id="btnSubmitMutasi"
+                class="w-full sm:w-auto py-2.5 px-6 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 ease-in-out transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
                 Proses Mutasi
             </button>
         </div>
@@ -131,6 +142,23 @@
             fieldStatus.classList.remove('hidden');
             document.getElementById('kondisi_sesudah').required = true;
         }
+        
+        toggleServisOption();
+    }
+
+    function toggleServisOption() {
+        const kondisi = document.getElementById('kondisi_sesudah').value;
+        const opsiServis = document.getElementById('opsi_servis');
+        
+        // Cek jika field status tidak tersembunyi dan kondisi adalah rusak
+        if (!document.getElementById('field_status').classList.contains('hidden') && (kondisi === 'Rusak Ringan' || kondisi === 'Rusak Berat')) {
+            opsiServis.classList.remove('hidden');
+            opsiServis.classList.add('flex');
+        } else {
+            opsiServis.classList.add('hidden');
+            opsiServis.classList.remove('flex');
+            document.getElementById('ajukan_servis').checked = false;
+        }
     }
     
     function updateMaxJumlah() {
@@ -143,13 +171,42 @@
             const max = parseInt(selectedOption.getAttribute('data-jumlah'));
             
             inputJumlah.max = max;
-            if(parseInt(inputJumlah.value) > max) {
-                inputJumlah.value = max;
-            }
             infoMax.textContent = `Maksimal barang yang bisa dimutasi: ${max} unit`;
+            
+            // Panggil validasi setelah diupdate
+            validateJumlahLive();
         } else {
             inputJumlah.max = "";
             infoMax.textContent = `Pilih barang untuk melihat limit maksimal mutasi.`;
+            document.getElementById('jumlah_error').classList.add('hidden');
+            document.getElementById('btnSubmitMutasi').disabled = false;
+        }
+    }
+
+    function validateJumlahLive() {
+        const inputJumlah = document.getElementById('jumlah');
+        const errorText = document.getElementById('jumlah_error');
+        const btnSubmit = document.getElementById('btnSubmitMutasi');
+        
+        if (!inputJumlah.max) return; // Belum pilih barang
+        
+        const val = parseInt(inputJumlah.value) || 0;
+        const max = parseInt(inputJumlah.max);
+        
+        if (val > max) {
+            inputJumlah.classList.add('border-red-500', 'ring-1', 'ring-red-500');
+            errorText.textContent = `Jumlah melebihi stok tersedia (${max} unit)!`;
+            errorText.classList.remove('hidden');
+            btnSubmit.disabled = true;
+        } else if (val < 1) {
+            inputJumlah.classList.add('border-red-500', 'ring-1', 'ring-red-500');
+            errorText.textContent = `Jumlah minimal 1 unit!`;
+            errorText.classList.remove('hidden');
+            btnSubmit.disabled = true;
+        } else {
+            inputJumlah.classList.remove('border-red-500', 'ring-1', 'ring-red-500');
+            errorText.classList.add('hidden');
+            btnSubmit.disabled = false;
         }
     }
 </script>

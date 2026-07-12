@@ -32,6 +32,10 @@ class MutasiService
         return DB::transaction(function () use ($data) {
             $barang = Barang::findOrFail($data['id_barang']);
 
+            if ($barang->status_approval !== 'Tersedia') {
+                throw new \Exception('Barang tidak bisa dimutasi karena sedang dalam status: ' . $barang->status_approval);
+            }
+
             if ($data['jumlah'] > $barang->jumlah_barang) {
                 throw new \Exception('Jumlah mutasi melebihi sisa barang yang tersedia.');
             }
@@ -90,6 +94,14 @@ class MutasiService
 
             $mutasi->status = 'Disetujui';
             $mutasi->save();
+
+            // Auto-create perbaikan jika dicentang dan jenis mutasi adalah Ubah Status
+            if ($mutasi->jenis_mutasi === 'Ubah Status' && $mutasi->ajukan_servis) {
+                app(\App\Services\PerbaikanService::class)->mulaiPerbaikan($targetBarang->id_barang, [
+                    'tanggal_mulai' => now()->toDateString(),
+                    'keterangan' => 'Mutasi ke ' . $mutasi->kondisi_sesudah . ': ' . $mutasi->keterangan
+                ]);
+            }
 
             return $mutasi;
         });

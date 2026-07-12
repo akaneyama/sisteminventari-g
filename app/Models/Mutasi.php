@@ -22,6 +22,7 @@ class Mutasi extends Model
         'keterangan',
         'status',
         'alasan_penolakan',
+        'ajukan_servis',
     ];
 
     // Relasi

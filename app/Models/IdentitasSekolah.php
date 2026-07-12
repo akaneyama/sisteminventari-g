@@ -12,6 +12,7 @@ class IdentitasSekolah extends Model
     protected $table = 'identitas_sekolah';
 
     protected $fillable = [
+        'naungan',
         'nama_sekolah',
         'alamat',
         'email',

@@ -28,6 +28,15 @@
         </div>
     @endif
 
+    <div class="mb-6 p-4 bg-blue-50 border-l-4 border-blue-500 text-blue-700 rounded-xl shadow-sm text-sm">
+        <div class="flex items-start">
+            <svg class="w-5 h-5 mr-3 mt-0.5 flex-shrink-0 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <div>
+                <span class="font-bold">Informasi:</span> Fitur Edit ini dikhususkan untuk memperbaiki informasi dasar atau *typo*. Untuk memindahkan lokasi barang atau mengubah kondisi barang dari baik menjadi rusak, Anda wajib menggunakan menu <a href="{{ route('mutasi.create') }}" class="underline font-bold hover:text-blue-900">Mutasi Barang</a> karena hal tersebut memerlukan persetujuan Kepala Sekolah.
+            </div>
+        </div>
+    </div>
+
     <form action="{{ route('barang.update', $barang->id_barang) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
         @method('PUT')
@@ -63,12 +72,13 @@
             <div class="space-y-5">
                 <div>
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Lokasi Ruangan <span class="text-red-500">*</span></label>
-                    <select name="id_lokasi" required 
-                        class="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 bg-gray-50 hover:bg-white text-gray-900 sm:text-sm transition duration-200 ease-in-out">
+                    <select disabled 
+                        class="block w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-100 text-gray-500 sm:text-sm cursor-not-allowed">
                         @foreach($lokasi as $l)
                             <option value="{{ $l->id_lokasi }}" {{ (old('id_lokasi', $barang->id_lokasi) == $l->id_lokasi) ? 'selected' : '' }}>{{ $l->nama_ruangan }}</option>
                         @endforeach
                     </select>
+                    <p class="text-xs text-blue-600 mt-1.5 flex items-center font-medium"><svg class="w-3.5 h-3.5 mr-1 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>Gunakan menu Mutasi untuk memindahkan lokasi.</p>
                 </div>
                 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -79,12 +89,13 @@
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Kondisi <span class="text-red-500">*</span></label>
-                        <select name="kondisi" required 
-                            class="block w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 bg-gray-50 hover:bg-white text-gray-900 sm:text-sm transition duration-200 ease-in-out">
+                        <select disabled 
+                            class="block w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-100 text-gray-500 sm:text-sm cursor-not-allowed">
                             <option value="Baik" {{ old('kondisi', $barang->kondisi) == 'Baik' ? 'selected' : '' }}>Baik</option>
                             <option value="Rusak Ringan" {{ old('kondisi', $barang->kondisi) == 'Rusak Ringan' ? 'selected' : '' }}>Rusak Ringan</option>
                             <option value="Rusak Berat" {{ old('kondisi', $barang->kondisi) == 'Rusak Berat' ? 'selected' : '' }}>Rusak Berat</option>
                         </select>
+                        <p class="text-xs text-blue-600 mt-1.5 flex items-center font-medium"><svg class="w-3.5 h-3.5 mr-1 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>Gunakan menu Mutasi untuk mengubah kondisi.</p>
                     </div>
                 </div>
                 
@@ -136,6 +147,17 @@
                         </div>
                     </div>
                 </div>
+
+                @if($barang->bukti_nota)
+                <div class="mt-6 pt-6 border-t border-gray-100">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Bukti Nota / Penerimaan</label>
+                    <div class="inline-flex items-center px-3 py-1.5 rounded-lg bg-green-50 text-green-700 text-xs font-medium w-fit mb-3">
+                        <svg class="w-4 h-4 mr-1.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Bukti Nota telah dilampirkan
+                    </div><br>
+                    <img src="{{ asset('storage/' . $barang->bukti_nota) }}" alt="Bukti Nota" class="h-32 w-32 object-cover rounded-xl border border-gray-200 shadow-sm cursor-pointer hover:opacity-80 transition-opacity" onclick="openImageModal('{{ asset('storage/' . $barang->bukti_nota) }}')" title="Klik untuk memperbesar">
+                </div>
+                @endif
             </div>
         </div>
 
@@ -162,6 +184,15 @@
         var currentPhotoLabel = document.getElementById('current-photo');
         
         if (input.files && input.files[0]) {
+            if (input.files[0].size > 2097152) { // 2MB
+                alert('Ukuran foto tidak boleh lebih dari 2MB!');
+                input.value = '';
+                previewContainer.classList.add('hidden');
+                if(existingImage) existingImage.classList.remove('hidden');
+                if(currentPhotoLabel) currentPhotoLabel.classList.remove('hidden');
+                return;
+            }
+
             var reader = new FileReader();
             
             reader.onload = function(e) {

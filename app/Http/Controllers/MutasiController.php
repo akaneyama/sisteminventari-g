@@ -25,8 +25,8 @@ class MutasiController extends Controller
 
     public function create()
     {
-        // Hanya ambil barang yang belum dihapus (aktif)
-        $barang = Barang::with('lokasi')->get(); 
+        // Hanya ambil barang yang statusnya Tersedia (tidak sedang diservis / proses lain)
+        $barang = Barang::with('lokasi')->where('status_approval', 'Tersedia')->get(); 
         $lokasi = Lokasi::all();
         
         return view('admin.mutasi.create', compact('barang', 'lokasi'));
@@ -41,10 +41,28 @@ class MutasiController extends Controller
             'jenis_mutasi'    => 'required|in:Pindah Lokasi,Ubah Status,Penghapusan',
             'lokasi_tujuan'   => 'nullable|required_if:jenis_mutasi,Pindah Lokasi|exists:lokasi,id_lokasi',
             'kondisi_sesudah' => 'nullable|required_if:jenis_mutasi,Ubah Status|in:Baik,Rusak Ringan,Rusak Berat',
+            'ajukan_servis'   => 'nullable|boolean',
             'keterangan'      => 'required|string',
         ]);
 
+        $data['ajukan_servis'] = $request->has('ajukan_servis');
+
         $this->mutasiService->create($data);
         return redirect()->route('mutasi.index')->with('success', 'Mutasi barang berhasil diajukan dan menunggu persetujuan Kepala Sekolah!');
+    }
+
+    public function cetakBAST($id)
+    {
+        $mutasi = \App\Models\Mutasi::with(['barang', 'lokasiAsal', 'lokasiTujuan'])->findOrFail($id);
+        $identitas = \App\Models\IdentitasSekolah::first();
+        
+        if (!$identitas) {
+            return redirect()->back()->with('error', 'Data Identitas Sekolah belum diatur. Silakan atur terlebih dahulu di menu pengaturan.');
+        }
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.mutasi.bast_pdf', compact('mutasi', 'identitas'));
+        $pdf->setPaper('A4', 'portrait');
+        
+        return $pdf->stream('BAST_Mutasi_' . ($mutasi->barang->kode_inventaris ?? 'Barang') . '.pdf');
     }
 }

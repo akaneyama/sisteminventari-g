@@ -16,6 +16,7 @@ class Perbaikan extends Model
         'keterangan',
         'biaya',
         'status_perbaikan',
+        'nota_perbaikan',
     ];
 
     public function barang()

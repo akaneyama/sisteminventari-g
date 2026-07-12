@@ -1,0 +1,154 @@
+erDiagram
+
+    %% ============================================================
+    %% ERD - SISTEM INFORMASI INVENTARIS
+    %% Dibuat berdasarkan Model & Migration Laravel
+    %% ============================================================
+
+    USERS {
+        bigint      id_user         PK
+        string      nama_lengkap
+        string      username        UK
+        string      email           UK
+        string      password
+        enum        role            "Admin, Kepsek"
+        timestamp   created_at
+        timestamp   updated_at
+    }
+
+    KATEGORI {
+        bigint      id_kategori     PK
+        string      nama_kategori
+        text        deskripsi
+        timestamp   created_at
+        timestamp   updated_at
+    }
+
+    LOKASI {
+        bigint      id_lokasi       PK
+        string      nama_ruangan
+        string      gedung
+        timestamp   created_at
+        timestamp   updated_at
+    }
+
+    SUMBER_DANA {
+        bigint      id_sumber_dana   PK
+        string      nama_sumber_dana UK
+        integer     tahun
+        text        deskripsi
+        timestamp   created_at
+        timestamp   updated_at
+    }
+
+    SUPPLIERS {
+        bigint      id_supplier     PK
+        string      nama_supplier
+        string      kontak_person
+        string      telepon         UK
+        string      email           UK
+        text        alamat
+        timestamp   created_at
+        timestamp   updated_at
+    }
+
+    BARANG {
+        bigint      id_barang          PK
+        string      kode_inventaris    UK
+        string      nama_barang
+        string      merk_type
+        integer     tahun_perolehan
+        string      sumber_dana
+        integer     jumlah_barang
+        enum        kondisi            "Baik, Rusak Ringan, Rusak Berat"
+        bigint      id_kategori        FK
+        bigint      id_lokasi          FK
+        bigint      id_sumber_dana_new FK
+        bigint      id_supplier        FK
+        string      foto_barang
+        timestamp   created_at
+        timestamp   updated_at
+        timestamp   deleted_at         "SoftDelete"
+    }
+
+    MUTASI {
+        bigint      id_mutasi       PK
+        date        tanggal_mutasi
+        enum        jenis_mutasi    "Pindah Lokasi, Ubah Status, Penghapusan"
+        bigint      id_barang       FK
+        bigint      id_user         FK
+        integer     jumlah
+        bigint      lokasi_asal     FK
+        bigint      lokasi_tujuan   FK
+        enum        kondisi_sebelum "Baik, Rusak Ringan, Rusak Berat"
+        enum        kondisi_sesudah "Baik, Rusak Ringan, Rusak Berat"
+        text        keterangan
+        timestamp   created_at
+        timestamp   updated_at
+    }
+
+    %% ============================================================
+    %% RELASI ANTAR ENTITAS
+    %% ============================================================
+
+    KATEGORI    ||--o{ BARANG  : "memiliki"
+    LOKASI      ||--o{ BARANG  : "menyimpan"
+    SUMBER_DANA ||--o{ BARANG  : "membiayai"
+    SUPPLIERS   ||--o{ BARANG  : "mensuplai"
+    BARANG      ||--o{ MUTASI  : "mengalami"
+    USERS       ||--o{ MUTASI  : "memproses"
+    LOKASI      ||--o{ MUTASI  : "lokasi asal"
+    LOKASI      ||--o{ MUTASI  : "lokasi tujuan"
+
+=======================================================================
+KETERANGAN RELASI
+=======================================================================
+
+1. KATEGORI  ||--o{ BARANG
+   - Satu Kategori dapat memiliki BANYAK Barang
+   - Setiap Barang WAJIB memiliki satu Kategori
+   - ON DELETE: RESTRICT (kategori tidak bisa dihapus jika masih ada barang)
+
+2. LOKASI    ||--o{ BARANG
+   - Satu Lokasi dapat menyimpan BANYAK Barang
+   - Setiap Barang WAJIB memiliki satu Lokasi
+   - ON DELETE: RESTRICT (lokasi tidak bisa dihapus jika masih ada barang)
+
+3. SUMBER_DANA ||--o{ BARANG
+   - Satu Sumber Dana dapat membiayai BANYAK Barang
+   - Foreign key: id_sumber_dana_new (nullable)
+   - ON DELETE: RESTRICT
+
+4. SUPPLIERS ||--o{ BARANG
+   - Satu Supplier dapat mensuplai BANYAK Barang
+   - Foreign key: id_supplier (nullable)
+   - ON DELETE: RESTRICT
+
+5. BARANG    ||--o{ MUTASI
+   - Satu Barang dapat mengalami BANYAK Mutasi (riwayat perubahan)
+   - ON DELETE: CASCADE (mutasi dihapus jika barang dihapus)
+   - Menggunakan withTrashed() agar riwayat tetap muncul meski barang di-softdelete
+
+6. USERS     ||--o{ MUTASI
+   - Satu User (Admin) dapat memproses BANYAK Mutasi
+   - ON DELETE: RESTRICT
+
+7. LOKASI    ||--o{ MUTASI  [lokasi_asal]
+   - Lokasi asal sebelum mutasi "Pindah Lokasi" (nullable)
+   - ON DELETE: SET NULL
+
+8. LOKASI    ||--o{ MUTASI  [lokasi_tujuan]
+   - Lokasi tujuan setelah mutasi "Pindah Lokasi" (nullable)
+   - ON DELETE: SET NULL
+
+=======================================================================
+CATATAN TEKNIS
+=======================================================================
+- Tabel BARANG menggunakan SoftDeletes (kolom deleted_at)
+  sehingga data tidak benar-benar terhapus dari database
+- Kolom `sumber_dana` (string lama) masih ada di tabel BARANG
+  sebagai data lama sebelum normalisasi ke tabel SUMBER_DANA
+- Tabel `tahun_pengadaan` sudah dihapus dalam proses normalisasi,
+  digabung menjadi kolom `tahun` di tabel SUMBER_DANA
+- Role USERS: 'Admin' (kelola data) dan 'Kepsek' (lihat laporan)
+=======================================================================

@@ -14,6 +14,7 @@ use App\Http\Controllers\Kepsek\KepsekBarangController;
 use App\Http\Controllers\Kepsek\KepsekMutasiController;
 use App\Http\Controllers\Kepsek\ApprovalController;
 use App\Http\Controllers\IdentitasSekolahController;
+use App\Http\Controllers\UserController;
 // --------------------------------------------------------
 // RUTE DASAR & AUTENTIKASI
 // --------------------------------------------------------
@@ -21,6 +22,15 @@ use App\Http\Controllers\IdentitasSekolahController;
 Route::get('/', function () {
     return redirect('/login');
 });
+
+// Fallback untuk local development di Windows (karena php artisan serve sering gagal baca symlink)
+Route::get('/storage/{path}', function ($path) {
+    $filePath = storage_path('app/public/' . $path);
+    if (file_exists($filePath)) {
+        return response()->file($filePath);
+    }
+    abort(404);
+})->where('path', '.*');
 
 // Autentikasi (Login & Logout)
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login')->middleware('guest');
@@ -51,11 +61,19 @@ Route::middleware('auth')->group(function () {
         Route::get('identitas', [IdentitasSekolahController::class, 'index'])->name('identitas.index');
         Route::post('identitas', [IdentitasSekolahController::class, 'update'])->name('identitas.update');
         
+        // Manajemen Pengguna
+        Route::get('users/trash', [UserController::class, 'trash'])->name('users.trash');
+        Route::patch('users/{id}/restore', [UserController::class, 'restore'])->name('users.restore');
+        Route::resource('users', UserController::class)->except(['show']);
+        
         // Modul Inti Data Barang (Task 4)
+        Route::get('barang/trash', [BarangController::class, 'trash'])->name('barang.trash');
+        Route::patch('barang/{id}/restore', [BarangController::class, 'restore'])->name('barang.restore');
         Route::resource('barang', BarangController::class);
         
         // Modul Transaksi Mutasi (Task 5)
         Route::resource('mutasi', MutasiController::class)->only(['index', 'create', 'store']);
+        Route::get('/mutasi/{id}/cetak-bast', [MutasiController::class, 'cetakBAST'])->name('admin.mutasi.cetak_bast');
 
         // Rute Cetak Label QR Per Barang (Task 6)
         Route::get('/barang/{id}/label', [LaporanController::class, 'printLabel'])->name('barang.label');
@@ -67,12 +85,15 @@ Route::middleware('auth')->group(function () {
 
         // Perbaikan Aset (Maintenance)
         Route::get('/perbaikan', [\App\Http\Controllers\PerbaikanController::class, 'index'])->name('perbaikan.index');
+        Route::get('/perbaikan/{id}/cetak', [\App\Http\Controllers\PerbaikanController::class, 'cetakPDF'])->name('perbaikan.cetak');
         Route::get('/perbaikan/create', [\App\Http\Controllers\PerbaikanController::class, 'create'])->name('perbaikan.create');
         Route::post('/perbaikan', [\App\Http\Controllers\PerbaikanController::class, 'store'])->name('perbaikan.store');
         Route::patch('/perbaikan/{id}/selesai', [\App\Http\Controllers\PerbaikanController::class, 'selesai'])->name('perbaikan.selesai');
 
         // Status Pengajuan Pengadaan (Admin)
         Route::get('/pengajuan', [\App\Http\Controllers\PengajuanController::class, 'index'])->name('admin.pengajuan.index');
+        Route::patch('/pengajuan/{id}/terima', [\App\Http\Controllers\PengajuanController::class, 'terimaBarang'])->name('admin.pengajuan.terima');
+        Route::get('/pengajuan/{id}/cetak-po', [\App\Http\Controllers\PengajuanController::class, 'cetakPO'])->name('admin.pengajuan.cetak_po');
     });
 
 

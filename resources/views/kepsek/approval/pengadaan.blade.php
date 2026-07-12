@@ -58,13 +58,10 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div class="flex items-center justify-end space-x-2">
-                            <form action="{{ route('kepsek.approval.pengadaan.approve', $item->id_barang) }}" method="POST" onsubmit="return confirm('Anda yakin menyetujui pengadaan barang ini? Barang akan langsung masuk ke daftar inventaris.');">
-                                @csrf @method('PATCH')
-                                <button type="submit" class="inline-flex items-center px-3 py-1.5 bg-green-100 text-green-700 hover:bg-green-200 rounded-lg text-xs font-bold transition-colors">
-                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                    Setujui
-                                </button>
-                            </form>
+                            <button type="button" onclick="bukaModalSetujui({{ $item->id_barang }}, '{{ $item->nama_barang }}', {{ $item->jumlah_barang }})" class="inline-flex items-center px-3 py-1.5 bg-green-100 text-green-700 hover:bg-green-200 rounded-lg text-xs font-bold transition-colors">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                Setujui
+                            </button>
                             <button type="button" onclick="bukaModalTolak({{ $item->id_barang }}, '{{ $item->nama_barang }}')" class="inline-flex items-center px-3 py-1.5 bg-red-100 text-red-700 hover:bg-red-200 rounded-lg text-xs font-bold transition-colors">
                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                                 Tolak
@@ -115,6 +112,42 @@
     </div>
 </div>
 
+{{-- Modal Setujui Pengadaan --}}
+<div id="modalSetujui" class="fixed inset-0 z-50 hidden bg-gray-900/50 backdrop-blur-sm flex items-center justify-center">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 overflow-hidden">
+        <form id="formSetujui" method="POST">
+            @csrf @method('PATCH')
+            <div class="px-6 py-4 border-b border-gray-100 bg-green-50 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-green-800">Setujui Pengajuan Barang</h3>
+                <button type="button" onclick="tutupModalSetujui()" class="text-green-400 hover:text-green-600 text-2xl leading-none">&times;</button>
+            </div>
+            <div class="p-6">
+                <p class="text-sm font-medium text-gray-600 mb-4">Anda akan menyetujui pengadaan: <br><span id="namaBarangSetujui" class="font-bold text-gray-900 text-lg"></span></p>
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Jumlah Disetujui <span class="text-green-500">*</span></label>
+                    <input type="number" name="jumlah_disetujui" id="jumlahDisetujuiInput" min="1" required class="block w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-green-500 focus:border-green-500 transition-colors">
+                    <p class="text-xs text-gray-500 mt-1">Ubah jumlah jika disetujui sebagian.</p>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Alasan/Keterangan <span class="text-gray-400 text-xs font-normal">(Opsional)</span></label>
+                    <textarea name="alasan_penolakan" rows="2" placeholder="Tuliskan keterangan (misal: disetujui sebagian karena anggaran)..." class="block w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:bg-white focus:ring-green-500 focus:border-green-500 transition-colors"></textarea>
+                </div>
+                
+                <div class="p-3 bg-green-50 text-green-700 text-xs rounded-lg mt-2 font-medium border border-green-100">
+                    <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Barang akan langsung masuk ke dalam inventaris dengan jumlah yang disetujui.
+                </div>
+            </div>
+            <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-3">
+                <button type="button" onclick="tutupModalSetujui()" class="px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-xl text-sm font-semibold hover:bg-gray-50">Batal</button>
+                <button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl text-sm font-semibold">Setujui Pengadaan</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
     function bukaModalTolak(id, nama) {
         document.getElementById('modalTolak').classList.remove('hidden');
@@ -123,6 +156,17 @@
     }
     function tutupModalTolak() {
         document.getElementById('modalTolak').classList.add('hidden');
+    }
+
+    function bukaModalSetujui(id, nama, jumlah) {
+        document.getElementById('modalSetujui').classList.remove('hidden');
+        document.getElementById('namaBarangSetujui').innerText = nama;
+        document.getElementById('jumlahDisetujuiInput').value = jumlah;
+        document.getElementById('jumlahDisetujuiInput').max = jumlah;
+        document.getElementById('formSetujui').action = `/kepsek/approval/pengadaan/${id}/approve`;
+    }
+    function tutupModalSetujui() {
+        document.getElementById('modalSetujui').classList.add('hidden');
     }
 </script>
 @endsection

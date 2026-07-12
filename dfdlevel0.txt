@@ -1,0 +1,81 @@
+Berikut adalah DFD Level 0 yang sebenarnya (sering disebut Diagram Konteks), di mana seluruh sistem digambarkan sebagai SATU kesatuan, dan juga Alur Peran (Use Case Flow) yang menjelaskan secara spesifik Administrator dan Kepala Sekolah bisa melakukan apa saja.
+
+### 1. DFD Level 0 (Diagram Konteks)
+Diagram ini menunjukkan interaksi sistem secara garis besar dengan pengguna (Admin dan Kepala Sekolah).
+
+```mermaid
+graph LR
+    %% Styling
+    classDef entity fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef system fill:#bbf,stroke:#333,stroke-width:2px,shape:circle;
+
+    %% Entitas
+    Admin[Admin]:::entity
+    Kepsek[Kepala Sekolah]:::entity
+
+    %% Sistem Utama
+    Sistem((0 Sistem Informasi Inventaris Barang)):::system
+
+    %% Interaksi Admin
+    Admin -->|Input Data Master Input Barang Data Mutasi dan Login| Sistem
+    Sistem -->|Menampilkan Dashboard Data Barang Riwayat Mutasi Laporan dan Cetak Label| Admin
+
+    %% Interaksi Kepsek
+    Kepsek -->|Request Laporan dan Login| Sistem
+    Sistem -->|Menampilkan Dashboard View Data Barang View Mutasi Laporan dan Label| Kepsek
+```
+
+---
+
+### 2. Alur Pembagian Peran (Siapa Bisa Apa?)
+Untuk mempermudah pemahaman mengenai fitur-fitur apa saja yang bisa diakses oleh masing-masing *Role* (Peran), berikut adalah peta alurnya:
+
+```mermaid
+mindmap
+  root((Sistem Inventaris))
+    Admin
+      Kelola Master Data
+        Tambah Edit Hapus Kategori
+        Tambah Edit Hapus Lokasi
+        Tambah Edit Hapus Sumber Dana
+        Tambah Edit Hapus Supplier
+      Kelola Data Barang
+        Pendaftaran Barang Baru
+        Edit Detail Barang
+        Hapus Barang
+      Transaksi Mutasi
+        Proses Pindah Lokasi
+        Proses Ubah Kondisi
+        Proses Penghapusan Aset
+      Laporan dan Cetak Label
+        Generate Label Barcode QR
+        Unduh Laporan Excel
+        Unduh Laporan PDF
+      Dashboard Statistik
+        Lihat Analitik Total Aset
+    Kepala Sekolah
+      Pemantauan Barang
+        Lihat Daftar Inventaris Berjalan
+      Pemantauan Mutasi
+        Lihat Riwayat Pergerakan Aset
+      Laporan dan Cetak Label
+        Generate Label Barcode QR
+        Unduh Laporan Excel
+        Unduh Laporan PDF
+      Dashboard Statistik
+        Lihat Analitik Total Aset
+```
+
+### Ringkasan Penjelasan Peran:
+
+**Administrator:**
+*   Bertindak sebagai **operator utama** aplikasi.
+*   Bisa melakukan *Input, Edit, dan Delete* untuk data pendukung (Master Data).
+*   Satu-satunya peran yang bisa mendaftarkan barang baru ke dalam sistem.
+*   Satu-satunya peran yang bisa mengeksekusi mutasi (misalnya: memindahkan meja dari Ruang A ke Ruang B, atau mengubah status laptop dari Baik menjadi Rusak).
+*   Bisa mencetak label identitas fisik barang dan menarik laporan PDF/Excel.
+
+**Kepala Sekolah:**
+*   Bertindak sebagai **pengawas / validator pasif**.
+*   Secara prinsip hanya diberikan hak akses membaca data (*Read-Only*) untuk melihat ketersediaan aset dan riwayat perpindahan aset tanpa takut tidak sengaja menghapus/mengubah data.
+*   Tetap bisa langsung mencetak Laporan PDF/Excel atau Label QR jika sewaktu-waktu membutuhkan berkas administratif tanpa harus selalu meminta Admin.

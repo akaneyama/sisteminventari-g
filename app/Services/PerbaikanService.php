@@ -7,9 +7,15 @@ use App\Models\Perbaikan;
 
 class PerbaikanService
 {
-    public function getAll()
+    public function getAll($filter = [])
     {
-        return Perbaikan::with('barang')->latest()->get();
+        $query = Perbaikan::with('barang');
+
+        if (!empty($filter['status'])) {
+            $query->where('status_perbaikan', $filter['status']);
+        }
+
+        return $query->latest()->get();
     }
 
     public function mulaiPerbaikan($id_barang, array $data)
@@ -36,11 +42,17 @@ class PerbaikanService
         $perbaikan = Perbaikan::findOrFail($id_perbaikan);
         $barang = $perbaikan->barang;
 
-        $perbaikan->update([
+        $updateData = [
             'tanggal_selesai' => $data['tanggal_selesai'],
             'biaya' => $data['biaya'] ?? 0,
             'status_perbaikan' => $data['hasil'] === 'Berhasil' ? 'Selesai Berhasil' : 'Selesai Gagal',
-        ]);
+        ];
+
+        if (isset($data['nota_perbaikan'])) {
+            $updateData['nota_perbaikan'] = $data['nota_perbaikan'];
+        }
+
+        $perbaikan->update($updateData);
 
         if ($data['hasil'] === 'Berhasil') {
             $barang->kondisi = $data['kondisi_akhir'];

@@ -87,9 +87,7 @@ class BarangController extends Controller
             'nama_barang' => 'required|string|max:255',
             'merk_type' => 'required|string|max:255',
             'tahun_perolehan' => 'required|integer|digits:4',
-            'kondisi' => 'required|in:Baik,Rusak Ringan,Rusak Berat',
             'id_kategori' => 'required|exists:kategori,id_kategori',
-            'id_lokasi' => 'required|exists:lokasi,id_lokasi',
             'id_supplier' => 'required|exists:suppliers,id_supplier',
             'jumlah_barang' => 'required|integer|min:1',
             'foto_barang' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
@@ -108,5 +106,26 @@ class BarangController extends Controller
     {
         $this->barangService->requestDelete($id);
         return redirect()->route('barang.index')->with('success', 'Penghapusan barang diajukan dan menunggu persetujuan Kepala Sekolah.');
+    }
+
+    public function trash()
+    {
+        $barang = \App\Models\Barang::onlyTrashed()
+            ->with(['kategori', 'lokasi', 'sumberDana', 'supplier'])
+            ->latest('deleted_at')
+            ->get();
+            
+        return view('admin.barang.trash', compact('barang'));
+    }
+
+    public function restore($id)
+    {
+        $barang = \App\Models\Barang::onlyTrashed()->findOrFail($id);
+        
+        // Kita juga bisa mengembalikan statusnya ke Tersedia agar tidak menyangkut di 'Menunggu Penghapusan'
+        $barang->status_approval = 'Tersedia';
+        $barang->restore();
+        
+        return redirect()->route('barang.trash')->with('success', 'Barang berhasil dipulihkan dari tong sampah.');
     }
 }

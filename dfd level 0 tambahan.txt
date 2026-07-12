@@ -1,0 +1,17 @@
+Yang Perlu Ditambahkan:
+
+Arus Data dari Kepala Sekolah ke Sistem (Input Kepsek):
+Data Persetujuan (Approval): Sesuai tabel mutasi dan perubahan_barangs yang memiliki status Menunggu, Disetujui, Ditolak.
+Data Evaluasi / Catatan Laporan: Sesuai tabel evaluasi_laporans.
+
+Arus Data dari Admin ke Sistem (Input Admin Tambahan):
+Data Perbaikan Barang: Sesuai tabel perbaikans.
+Data Pengajuan (Mutasi & Perubahan Spesifikasi): Admin mengajukan, lalu Kepsek menyetujui.
+Data Identitas Sekolah: Sesuai tabel identitas_sekolah (untuk kop surat di laporan).
+
+Arus Data dari Sistem ke Admin (Output Tambahan):
+Status Persetujuan: Admin perlu menerima notifikasi/data apakah pengajuannya disetujui atau ditolak oleh Kepsek.
+Catatan Evaluasi: Admin menerima evaluasi laporan dari Kepsek.
+
+Koreksi Arus Data ke Kepala Sekolah:
+Di gambar Anda, "Label Barang" diberikan ke Kepala Sekolah. Biasanya, Kepsek tidak butuh label barang (itu untuk Admin cetak dan tempel). Kepsek lebih butuh Laporan, Data Barang, dan Permintaan Persetujuan.

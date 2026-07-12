@@ -128,7 +128,11 @@
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Foto Barang <span class="text-gray-400 font-normal">(Opsional)</span></label>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Foto Barang / Contoh Gambar <span class="text-gray-400 font-normal">(Opsional)</span></label>
+                    <p class="text-xs text-gray-500 mb-3 bg-blue-50 p-2.5 rounded-lg border border-blue-100 text-blue-800">
+                        <svg class="w-4 h-4 inline mr-1 -mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <strong>Catatan:</strong> Karena ini pengajuan barang baru, Anda dapat mengunggah <strong>gambar referensi</strong> atau <strong>contoh foto barang</strong> dari internet agar Kepala Sekolah lebih mudah memahaminya. <strong>(Maksimal 2MB)</strong>
+                    </p>
                     <input type="file" name="foto_barang" accept="image/*" onchange="previewImage(event)"
                         class="block w-full text-sm text-gray-500 border border-gray-200 rounded-xl bg-gray-50 hover:bg-white focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition duration-200 ease-in-out file:mr-4 file:py-3 file:px-4 file:rounded-l-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
                     <div class="mt-4 hidden" id="preview-container">
@@ -161,6 +165,13 @@
         var previewImage = document.getElementById('image-preview');
         
         if (input.files && input.files[0]) {
+            if (input.files[0].size > 2097152) { // 2MB
+                alert('Ukuran foto tidak boleh lebih dari 2MB!');
+                input.value = '';
+                previewContainer.classList.add('hidden');
+                return;
+            }
+
             var reader = new FileReader();
             
             reader.onload = function(e) {
