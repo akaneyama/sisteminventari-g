@@ -30,7 +30,7 @@ class KepsekBarangController extends Controller
         if (!empty($filter['id_kategori'])) $query->where('id_kategori', $filter['id_kategori']);
         if (!empty($filter['kondisi']))     $query->where('kondisi', $filter['kondisi']);
 
-        $barang = $query->latest()->get();
+        $barang = $query->latest()->paginate(10);
 
         return view('kepsek.barang.index', compact('barang', 'kategori', 'lokasi', 'filter'));
     }

@@ -22,7 +22,7 @@
                 <tr>
                     <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Data Barang</th>
                     <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Sumber/Tahun</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Supplier</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider hidden sm:table-cell">Supplier</th>
                     <th class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Aksi Keputusan</th>
                 </tr>
             </thead>
@@ -46,6 +46,7 @@
                                 <div class="text-sm text-gray-900">{{ $item->nama_barang }}</div>
                                 <div class="text-xs text-gray-500 mt-0.5">{{ $item->merk_type }} &bull; {{ $item->jumlah_barang }} Unit</div>
                                 <div class="text-xs text-gray-400 mt-1">Rencana Lokasi: {{ $item->lokasi->nama_ruangan ?? '-' }}</div>
+                                <div class="text-xs text-gray-400 sm:hidden">Supplier: {{ $item->supplier->nama_supplier ?? '-' }}</div>
                             </div>
                         </div>
                     </td>
@@ -53,7 +54,7 @@
                         <span class="font-medium">{{ $item->sumberDana->nama_sumber_dana ?? '-' }}</span><br>
                         Tahun: {{ $item->tahun_perolehan }}
                     </td>
-                    <td class="px-6 py-4 text-sm text-gray-700">
+                    <td class="px-6 py-4 text-sm text-gray-700 hidden sm:table-cell">
                         {{ $item->supplier->nama_supplier ?? '-' }}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -79,6 +80,9 @@
                 @endforelse
             </tbody>
         </table>
+    </div>
+    <div class="p-4 border-t border-gray-100">
+        {{ $pengadaans->withQueryString()->links() }}
     </div>
 </div>
 

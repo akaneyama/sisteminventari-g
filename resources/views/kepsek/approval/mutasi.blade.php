@@ -107,6 +107,9 @@
             </tbody>
         </table>
     </div>
+    <div class="p-4 border-t border-gray-100">
+        {{ $mutasis->withQueryString()->links() }}
+    </div>
 </div>
 
 {{-- Modal Tolak Mutasi --}}

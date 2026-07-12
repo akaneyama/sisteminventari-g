@@ -94,6 +94,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/pengajuan', [\App\Http\Controllers\PengajuanController::class, 'index'])->name('admin.pengajuan.index');
         Route::patch('/pengajuan/{id}/terima', [\App\Http\Controllers\PengajuanController::class, 'terimaBarang'])->name('admin.pengajuan.terima');
         Route::get('/pengajuan/{id}/cetak-po', [\App\Http\Controllers\PengajuanController::class, 'cetakPO'])->name('admin.pengajuan.cetak_po');
+
+        // Notifikasi Polling Admin
+        Route::get('/notifications', [DashboardController::class, 'adminNotifications'])->name('admin.notifications');
     });
 
 
@@ -134,6 +137,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/approval/mutasi', [ApprovalController::class, 'mutasi'])->name('kepsek.approval.mutasi');
         Route::patch('/approval/mutasi/{id}/approve', [ApprovalController::class, 'approveMutasi'])->name('kepsek.approval.mutasi.approve');
         Route::patch('/approval/mutasi/{id}/reject', [ApprovalController::class, 'rejectMutasi'])->name('kepsek.approval.mutasi.reject');
+
+        // Notifikasi Persetujuan (Polling)
+        Route::get('/notifications', [ApprovalController::class, 'getNotificationCounts'])->name('kepsek.notifications');
     });
 
 

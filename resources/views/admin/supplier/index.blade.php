@@ -47,9 +47,9 @@
                 <tr>
                     <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider w-16">No</th>
                     <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Nama Supplier</th>
-                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Kontak Person</th>
-                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Telepon & Email</th>
-                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Alamat</th>
+                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider hidden sm:table-cell">Kontak Person</th>
+                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider hidden sm:table-cell">Telepon & Email</th>
+                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider hidden lg:table-cell">Alamat</th>
                     <th scope="col" class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider w-32">Aksi</th>
                 </tr>
             </thead>
@@ -59,17 +59,22 @@
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-medium">
                         {{ $loop->iteration }}
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
-                        {{ $item->nama_supplier }}
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-bold text-gray-900">{{ $item->nama_supplier }}</div>
+                        <div class="text-xs text-gray-500 sm:hidden mt-0.5">
+                            Kontak: {{ $item->kontak_person ?? '-' }}<br>
+                            Telp: {{ $item->telepon }}
+                        </div>
+                        <div class="text-xs text-gray-500 lg:hidden mt-0.5 whitespace-normal">Alamat: {{ $item->alamat }}</div>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 hidden sm:table-cell">
                         {{ $item->kontak_person ?? '-' }}
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 hidden sm:table-cell">
                         <div>{{ $item->telepon }}</div>
                         <div class="text-xs text-gray-400">{{ $item->email ?? '' }}</div>
                     </td>
-                    <td class="px-6 py-4 text-sm text-gray-600 truncate max-w-xs">
+                    <td class="px-6 py-4 text-sm text-gray-600 truncate max-w-xs hidden lg:table-cell">
                         {{ $item->alamat }}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -98,6 +103,9 @@
                 @endforelse
             </tbody>
         </table>
+    </div>
+    <div class="p-4 border-t border-gray-100">
+        {{ $supplier->withQueryString()->links() }}
     </div>
 </div>
 @endsection

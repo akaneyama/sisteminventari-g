@@ -47,7 +47,7 @@
                 <tr>
                     <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider w-16">No</th>
                     <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Nama Kategori</th>
-                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Deskripsi</th>
+                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider hidden sm:table-cell">Deskripsi</th>
                     <th scope="col" class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider w-32">Aksi</th>
                 </tr>
             </thead>
@@ -57,10 +57,11 @@
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-medium">
                         {{ $loop->iteration }}
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
-                        {{ $item->nama_kategori }}
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-bold text-gray-900">{{ $item->nama_kategori }}</div>
+                        <div class="text-xs text-gray-500 sm:hidden mt-0.5 whitespace-normal">{{ $item->deskripsi ?? '-' }}</div>
                     </td>
-                    <td class="px-6 py-4 text-sm text-gray-600">
+                    <td class="px-6 py-4 text-sm text-gray-600 hidden sm:table-cell">
                         {{ $item->deskripsi ?? '-' }}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -89,6 +90,9 @@
                 @endforelse
             </tbody>
         </table>
+    </div>
+    <div class="p-4 border-t border-gray-100">
+        {{ $kategori->withQueryString()->links() }}
     </div>
 </div>
 @endsection

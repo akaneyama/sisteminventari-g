@@ -184,8 +184,8 @@
             </td>
             <td>
                 Dibuat Oleh,<br>
-                Admin Sarpras / Petugas Mutasi
-                <div class="ttd-nama">{{ current(explode(' ', $mutasi->user->nama_lengkap ?? 'Admin/Petugas')) }}</div>
+                Admin Inventari
+                <div class="ttd-nama">{{ current(explode(' ', $mutasi->user->nama_lengkap ?? 'Admin Inventari')) }}</div>
                 <div>NIP. {{ $mutasi->user->nip ?? '-' }}</div>
             </td>
         </tr>

@@ -95,6 +95,19 @@ class DashboardController extends Controller
         ));
     }
 
+    public function adminNotifications()
+    {
+        $counts = [
+            'barang' => \App\Models\Barang::where('kondisi', 'Rusak Berat')->where('status_approval', 'Tersedia')->count(),
+            'pengajuan' => \App\Models\Barang::where('status_approval', 'Pengadaan Disetujui')->count(),
+            'perbaikan' => \App\Models\Perbaikan::where('status', 'Proses')->count(),
+            'mutasi' => \App\Models\Mutasi::where('status', 'Ditolak')->count(), // Info mutasi yang ditolak
+        ];
+        
+        $counts['total'] = array_sum($counts);
+        return response()->json($counts);
+    }
+
     public function kepsek()
     {
         $total_jenis  = Barang::count();

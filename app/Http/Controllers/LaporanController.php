@@ -19,9 +19,9 @@ class LaporanController extends Controller
 
         $laporanService = new \App\Services\LaporanService();
         $query = $laporanService->getBarangLaporan($filter);
-        $barang = $query->latest()->get();
-
-        $stats = $laporanService->getStats($barang);
+        $stats = $laporanService->getStats(clone $query);
+        
+        $barang = $query->latest()->paginate(10);
 
         $lokasi     = Lokasi::all();
         $kategori   = Kategori::all();
@@ -42,9 +42,8 @@ class LaporanController extends Controller
         
         $laporanService = new \App\Services\LaporanService();
         $query = $laporanService->getBarangLaporan($filter);
+        $stats = $laporanService->getStats(clone $query);
         $barang = $query->get();
-
-        $stats = $laporanService->getStats($barang);
 
         $pdf = Pdf::loadView('laporan.pdf', compact('barang', 'stats', 'filter'))->setPaper('a4', 'landscape');
         return $pdf->download('Laporan_Inventaris_'.date('Ymd').'.pdf');

@@ -26,7 +26,7 @@
             <thead class="bg-gray-50">
                 <tr>
                     <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Identitas Barang</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Sumber Dana</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider hidden sm:table-cell">Sumber Dana</th>
                     <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Waktu Dihapus</th>
                     <th class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Aksi</th>
                 </tr>
@@ -46,10 +46,11 @@
                             <div>
                                 <div class="text-sm font-bold text-gray-400">{{ $b->kode_inventaris }}</div>
                                 <div class="text-sm text-gray-400">{{ $b->nama_barang }}</div>
+                                <div class="text-xs text-gray-400 mt-0.5 sm:hidden">{{ $b->sumberDana->nama_sumber_dana ?? $b->sumber_dana }} ({{ $b->tahun_perolehan }})</div>
                             </div>
                         </div>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400 hidden sm:table-cell">
                         {{ $b->sumberDana->nama_sumber_dana ?? $b->sumber_dana }}
                         <div class="text-xs text-gray-400">Thn: {{ $b->tahun_perolehan }}</div>
                     </td>
@@ -80,6 +81,9 @@
                 @endforelse
             </tbody>
         </table>
+    </div>
+    <div class="p-4 border-t border-gray-100">
+        {{ $barang->withQueryString()->links() }}
     </div>
 </div>
 @endsection

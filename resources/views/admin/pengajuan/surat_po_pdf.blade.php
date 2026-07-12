@@ -159,8 +159,8 @@
             </td>
             <td>
                 {{ date('d F Y') }}<br>
-                Pejabat Pengadaan / Admin Sarpras
-                <div class="ttd-nama">{{ Auth::user()->nama_lengkap ?? '_________________________' }}</div>
+                Admin Inventari
+                <div class="ttd-nama">{{ Auth::user()->nama_lengkap ?? 'Admin Inventari' }}</div>
                 <div>NIP. {{ Auth::user()->nip ?? '-' }}</div>
             </td>
         </tr>

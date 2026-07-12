@@ -101,6 +101,10 @@
     @endforelse
 </div>
 
+<div class="mt-6">
+    {{ $perubahans->withQueryString()->links() }}
+</div>
+
 {{-- Modal Tolak Perubahan --}}
 <div id="modalTolakPerubahan" class="fixed inset-0 z-50 hidden bg-gray-900/50 backdrop-blur-sm flex items-center justify-center">
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 overflow-hidden">

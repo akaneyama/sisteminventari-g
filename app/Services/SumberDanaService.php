@@ -20,7 +20,7 @@ class SumberDanaService
         if (!empty($filter['tahun'])) {
             $query->where('tahun', $filter['tahun']);
         }
-        return $query->latest()->get();
+        return $query->latest()->paginate(10);
     }
 
     public function create(array $data)

@@ -16,7 +16,7 @@ class UserController extends Controller
             $query->where('nama_lengkap', 'like', "%{$search}%")
                   ->orWhere('username', 'like', "%{$search}%")
                   ->orWhere('nip', 'like', "%{$search}%");
-        })->latest('id_user')->get();
+        })->latest('id_user')->paginate(10);
 
         return view('admin.users.index', compact('users', 'search'));
     }
@@ -89,7 +89,7 @@ class UserController extends Controller
 
     public function trash()
     {
-        $users = User::onlyTrashed()->latest('deleted_at')->get();
+        $users = User::onlyTrashed()->latest('deleted_at')->paginate(10);
         return view('admin.users.trash', compact('users'));
     }
 

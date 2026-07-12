@@ -99,4 +99,18 @@ class ApprovalController extends Controller
         $this->mutasiService->rejectMutasi($id, $request->alasan_penolakan);
         return redirect()->route('kepsek.approval.mutasi')->with('success', 'Mutasi barang telah ditolak.');
     }
+
+    public function getNotificationCounts()
+    {
+        $counts = [
+            'pengadaan' => $this->barangService->getPendingPengadaan()->count(),
+            'perubahan' => $this->barangService->getPendingPerubahan()->count(),
+            'mutasi' => $this->mutasiService->getPendingMutasi()->count(),
+            'penghapusan' => $this->barangService->getPendingApproval()->count(),
+        ];
+        
+        $counts['total'] = array_sum($counts);
+        
+        return response()->json($counts);
+    }
 }

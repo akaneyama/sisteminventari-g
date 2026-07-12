@@ -7,14 +7,16 @@
         <h2 class="text-2xl font-bold text-gray-800 tracking-tight">Manajemen Pengguna</h2>
         <p class="text-sm text-gray-500 mt-1">Kelola akun Admin dan Kepala Sekolah yang dapat mengakses sistem.</p>
     </div>
-    <div class="flex flex-col sm:flex-row items-center gap-3">
-        <a href="{{ route('users.trash') }}" class="inline-flex items-center justify-center py-2.5 px-5 border border-red-200 rounded-xl shadow-sm text-sm font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-all duration-200">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-            Tong Sampah
+    <div class="grid grid-cols-2 sm:flex sm:flex-row items-center gap-3 w-full sm:w-auto">
+        <a href="{{ route('users.trash') }}" class="col-span-1 inline-flex items-center justify-center py-2.5 px-3 border border-red-200 rounded-xl shadow-sm text-sm font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-all duration-200 w-full sm:w-auto">
+            <svg class="w-5 h-5 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+            <span class="hidden sm:inline">Sampah</span>
+            <span class="sm:hidden ml-1">Sampah</span>
         </a>
-        <a href="{{ route('users.create') }}" class="inline-flex items-center justify-center py-2.5 px-5 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-all duration-200">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-            Tambah Pengguna
+        <a href="{{ route('users.create') }}" class="col-span-1 inline-flex items-center justify-center py-2.5 px-3 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-all duration-200 w-full sm:w-auto">
+            <svg class="w-5 h-5 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+            <span class="hidden sm:inline">Tambah Pengguna</span>
+            <span class="sm:hidden ml-1">Tambah</span>
         </a>
     </div>
 </div>
@@ -44,8 +46,8 @@
             <thead class="bg-gray-50">
                 <tr>
                     <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Nama & NIP</th>
-                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Kontak</th>
-                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Username</th>
+                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider hidden sm:table-cell">Kontak</th>
+                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider hidden md:table-cell">Username</th>
                     <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Hak Akses</th>
                     <th scope="col" class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Aksi</th>
                 </tr>
@@ -56,11 +58,13 @@
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="text-sm font-bold text-gray-900">{{ $user->nama_lengkap }}</div>
                         <div class="text-xs text-gray-500">NIP. {{ $user->nip ?? '-' }}</div>
+                        <div class="text-xs text-blue-600 mt-1 sm:hidden">{{ $user->email }}</div>
+                        <div class="text-xs text-gray-500 md:hidden">@ {{ $user->username }}</div>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 hidden sm:table-cell">
                         {{ $user->email }}
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 hidden md:table-cell">
                         {{ $user->username }}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
@@ -98,6 +102,9 @@
                 @endforelse
             </tbody>
         </table>
+    </div>
+    <div class="p-4 border-t border-gray-100">
+        {{ $users->withQueryString()->links() }}
     </div>
 </div>
 @endsection

@@ -72,5 +72,8 @@
             </tbody>
         </table>
     </div>
+    <div class="p-4 border-t border-gray-100">
+        {{ $pendingBarang->withQueryString()->links() }}
+    </div>
 </div>
 @endsection

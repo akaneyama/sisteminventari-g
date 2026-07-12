@@ -17,15 +17,18 @@ class KepsekMutasiController extends Controller
         if (!empty($filter['search'])) {
             $s = $filter['search'];
             $query->whereHas('barang', function ($q) use ($s) {
-                $q->where('kode_inventaris', 'like', "%{$s}%")
-                  ->orWhere('nama_barang', 'like', "%{$s}%");
+                $q->withTrashed()
+                  ->where(function($q2) use ($s) {
+                      $q2->where('kode_inventaris', 'like', "%{$s}%")
+                         ->orWhere('nama_barang', 'like', "%{$s}%");
+                  });
             });
         }
         if (!empty($filter['jenis_mutasi']))   $query->where('jenis_mutasi', $filter['jenis_mutasi']);
         if (!empty($filter['tanggal_dari']))   $query->whereDate('tanggal_mutasi', '>=', $filter['tanggal_dari']);
         if (!empty($filter['tanggal_sampai'])) $query->whereDate('tanggal_mutasi', '<=', $filter['tanggal_sampai']);
 
-        $mutasi = $query->orderBy('tanggal_mutasi', 'desc')->get();
+        $mutasi = $query->orderBy('tanggal_mutasi', 'desc')->paginate(10);
 
         return view('kepsek.mutasi.index', compact('mutasi', 'filter'));
     }

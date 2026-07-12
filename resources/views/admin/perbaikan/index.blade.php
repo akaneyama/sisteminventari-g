@@ -7,16 +7,26 @@
         <h2 class="text-2xl font-bold text-gray-800 tracking-tight">Perbaikan Aset (Maintenance)</h2>
         <p class="text-sm text-gray-500 mt-1">Kelola barang yang sedang dalam masa perbaikan (servis).</p>
     </div>
-    <div class="w-full sm:w-auto">
-        <form method="GET" action="{{ route('perbaikan.index') }}" class="flex items-center gap-2">
-            <select name="status" onchange="this.form.submit()" class="block w-full sm:w-auto px-4 py-2 border border-gray-200 rounded-xl bg-white text-sm text-gray-700 focus:ring-blue-500 focus:border-blue-500">
-                <option value="">Semua Status</option>
-                <option value="Proses" {{ request('status') == 'Proses' ? 'selected' : '' }}>Dalam Perbaikan</option>
-                <option value="Selesai Berhasil" {{ request('status') == 'Selesai Berhasil' ? 'selected' : '' }}>Selesai Berhasil</option>
-                <option value="Selesai Gagal" {{ request('status') == 'Selesai Gagal' ? 'selected' : '' }}>Selesai Gagal</option>
-            </select>
-        </form>
-    </div>
+</div>
+
+<div class="mb-5 flex flex-wrap gap-1 p-1.5 bg-gray-100 rounded-xl w-fit border border-gray-200">
+    @php $status = request('status', ''); @endphp
+    <a href="{{ route('perbaikan.index') }}" 
+       class="px-5 py-2 text-sm font-semibold rounded-lg transition-all {{ $status === '' ? 'bg-white text-gray-800 shadow-sm border border-gray-200' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200' }}">
+        Semua Status
+    </a>
+    <a href="{{ route('perbaikan.index', ['status' => 'Proses']) }}" 
+       class="px-5 py-2 text-sm font-semibold rounded-lg transition-all {{ $status === 'Proses' ? 'bg-white text-blue-700 shadow-sm border border-gray-200' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200' }}">
+        Dalam Perbaikan
+    </a>
+    <a href="{{ route('perbaikan.index', ['status' => 'Selesai Berhasil']) }}" 
+       class="px-5 py-2 text-sm font-semibold rounded-lg transition-all {{ $status === 'Selesai Berhasil' ? 'bg-white text-green-700 shadow-sm border border-gray-200' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200' }}">
+        Selesai Berhasil
+    </a>
+    <a href="{{ route('perbaikan.index', ['status' => 'Selesai Gagal']) }}" 
+       class="px-5 py-2 text-sm font-semibold rounded-lg transition-all {{ $status === 'Selesai Gagal' ? 'bg-white text-red-700 shadow-sm border border-gray-200' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200' }}">
+        Selesai Gagal
+    </a>
 </div>
 
 @if(session('success'))
@@ -31,8 +41,8 @@
             <thead class="bg-gray-50">
                 <tr>
                     <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Barang</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Tanggal Mulai</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Keterangan</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider hidden sm:table-cell">Tanggal Mulai</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider hidden lg:table-cell">Keterangan</th>
                     <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
                     <th class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Aksi</th>
                 </tr>
@@ -43,11 +53,13 @@
                     <td class="px-6 py-4">
                         <div class="text-sm font-bold text-blue-700">{{ $p->barang->kode_inventaris ?? 'Terhapus' }}</div>
                         <div class="text-sm text-gray-900">{{ $p->barang->nama_barang ?? '-' }}</div>
+                        <div class="text-xs text-gray-500 mt-1 sm:hidden">Mulai: {{ \Carbon\Carbon::parse($p->tanggal_mulai)->format('d M Y') }}</div>
+                        <div class="text-xs text-gray-500 lg:hidden mt-1 line-clamp-2">{{ $p->keterangan }}</div>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 hidden sm:table-cell">
                         {{ \Carbon\Carbon::parse($p->tanggal_mulai)->format('d M Y') }}
                     </td>
-                    <td class="px-6 py-4 text-sm text-gray-600 max-w-xs truncate" title="{{ $p->keterangan }}">
+                    <td class="px-6 py-4 text-sm text-gray-600 max-w-xs truncate hidden lg:table-cell" title="{{ $p->keterangan }}">
                         {{ $p->keterangan }}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
@@ -88,6 +100,9 @@
                 @endforelse
             </tbody>
         </table>
+    </div>
+    <div class="p-4 border-t border-gray-100">
+        {{ $perbaikans->withQueryString()->links() }}
     </div>
 </div>
 

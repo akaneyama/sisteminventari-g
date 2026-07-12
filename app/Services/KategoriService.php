@@ -16,7 +16,7 @@ class KategoriService
                   ->orWhere('deskripsi', 'like', "%{$s}%");
             });
         }
-        return $query->latest()->get();
+        return $query->latest()->paginate(10);
     }
 
     public function create(array $data)

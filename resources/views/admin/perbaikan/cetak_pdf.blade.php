@@ -169,8 +169,8 @@
             </td>
             <td>
                 Dibuat Oleh,<br>
-                Admin Sarpras / Petugas
-                <div class="ttd-nama">{{ Auth::user()->nama_lengkap ?? 'Admin/Petugas' }}</div>
+                Admin Inventari
+                <div class="ttd-nama">{{ Auth::user()->nama_lengkap ?? 'Admin Inventari' }}</div>
                 <div>NIP. {{ Auth::user()->nip ?? '-' }}</div>
             </td>
         </tr>

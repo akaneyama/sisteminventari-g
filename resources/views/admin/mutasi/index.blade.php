@@ -68,9 +68,9 @@
                 <tr>
                     <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider w-32">Tanggal</th>
                     <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Barang</th>
-                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider w-24">Jumlah</th>
+                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider hidden sm:table-cell w-24">Jumlah</th>
                     <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Jenis Mutasi</th>
-                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Detail Perubahan</th>
+                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider hidden lg:table-cell">Detail Perubahan</th>
                     <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Status & Aksi</th>
                 </tr>
             </thead>
@@ -84,8 +84,22 @@
                     <td class="px-6 py-4 text-sm">
                         <div class="font-bold text-blue-600">{{ $item->barang->kode_inventaris ?? 'N/A' }}</div>
                         <div class="text-gray-500 text-xs mt-0.5">{{ $item->barang->nama_barang ?? 'Barang Terhapus' }}</div>
+                        <div class="text-gray-600 font-bold text-xs mt-1 sm:hidden">Jumlah: {{ $item->jumlah }} Unit</div>
+                        
+                        <div class="lg:hidden mt-2 p-2 bg-gray-50 rounded text-xs border border-gray-100">
+                            <span class="font-bold text-gray-600 block mb-1">Perubahan:</span>
+                            @if($item->jenis_mutasi == 'Pindah Lokasi')
+                                <span class="text-gray-500">Dari:</span> <span class="font-semibold">{{ $item->lokasiAsal->nama_ruangan ?? '-' }}</span> <br>
+                                <span class="text-gray-500">Ke:</span> <span class="font-semibold text-blue-600">{{ $item->lokasiTujuan->nama_ruangan ?? '-' }}</span>
+                            @elseif($item->jenis_mutasi == 'Ubah Status')
+                                <span class="text-gray-500">Dari:</span> <span class="font-semibold">{{ $item->kondisi_sebelum }}</span> <br>
+                                <span class="text-gray-500">Menjadi:</span> <span class="font-semibold text-yellow-600">{{ $item->kondisi_sesudah }}</span>
+                            @else
+                                <span class="italic text-gray-500">{{ $item->keterangan }}</span>
+                            @endif
+                        </div>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-800">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-800 hidden sm:table-cell">
                         {{ $item->jumlah }} Unit
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
@@ -97,7 +111,7 @@
                             <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 border border-red-200">{{ $item->jenis_mutasi }}</span>
                         @endif
                     </td>
-                    <td class="px-6 py-4 text-sm text-gray-700 leading-relaxed">
+                    <td class="px-6 py-4 text-sm text-gray-700 leading-relaxed hidden lg:table-cell">
                         @if($item->jenis_mutasi == 'Pindah Lokasi')
                             <span class="text-gray-500">Dari:</span> <span class="font-semibold">{{ $item->lokasiAsal->nama_ruangan ?? '-' }}</span> <br>
                             <span class="text-gray-500">Ke:</span> <span class="font-semibold text-blue-600">{{ $item->lokasiTujuan->nama_ruangan ?? '-' }}</span>
@@ -139,6 +153,9 @@
                 @endforelse
             </tbody>
         </table>
+    </div>
+    <div class="p-4 border-t border-gray-100">
+        {{ $mutasi->withQueryString()->links() }}
     </div>
 </div>
 @endsection

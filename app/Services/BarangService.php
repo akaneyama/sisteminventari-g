@@ -28,12 +28,12 @@ class BarangService
         if (!empty($filter['id_kategori']))  $query->where('id_kategori', $filter['id_kategori']);
         if (!empty($filter['kondisi']))      $query->where('kondisi', $filter['kondisi']);
 
-        return $query->latest()->get();
+        return $query->latest()->paginate(10);
     }
 
     public function getPendingApproval()
     {
-        return Barang::with(['kategori', 'lokasi'])->where('status_approval', 'Menunggu Penghapusan')->latest()->get();
+        return Barang::with(['kategori', 'lokasi'])->where('status_approval', 'Menunggu Penghapusan')->latest()->paginate(10);
     }
 
     public function create(array $data)
@@ -125,7 +125,7 @@ class BarangService
             $query->whereIn('status_approval', ['Menunggu Pengadaan', 'Pengadaan Disetujui', 'Pengadaan Ditolak', 'Tersedia', 'Dalam Perbaikan']);
         }
         
-        return $query->latest()->get();
+        return $query->latest()->paginate(10);
     }
 
     public function getPendingPengadaan()
@@ -133,7 +133,7 @@ class BarangService
         return Barang::with(['kategori', 'lokasi'])
             ->where('status_approval', 'Menunggu Pengadaan')
             ->latest()
-            ->get();
+            ->paginate(10);
     }
 
     public function approvePengadaan($id, $jumlah_disetujui, $alasan = null)
@@ -173,7 +173,7 @@ class BarangService
         return PerubahanBarang::with(['barang.kategori', 'barang.lokasi'])
             ->where('status', 'Menunggu')
             ->latest()
-            ->get();
+            ->paginate(10);
     }
 
     public function approvePerubahan($id)

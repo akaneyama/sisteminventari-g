@@ -7,18 +7,21 @@
         <h2 class="text-2xl font-bold text-gray-800 tracking-tight">Daftar Aset Barang</h2>
         <p class="text-sm text-gray-500 mt-1">Kelola data seluruh aset barang inventaris yang terdaftar.</p>
     </div>
-    <div class="flex flex-col sm:flex-row items-center gap-3">
-        <a href="{{ route('barang.trash') }}" class="inline-flex items-center justify-center py-2.5 px-5 border border-red-200 rounded-xl shadow-sm text-sm font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-all duration-200">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-            Tong Sampah
+    <div class="grid grid-cols-2 sm:flex sm:flex-row items-center gap-3 w-full sm:w-auto">
+        <a href="{{ route('barang.trash') }}" class="col-span-1 inline-flex items-center justify-center py-2.5 px-3 border border-red-200 rounded-xl shadow-sm text-sm font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-all duration-200 w-full sm:w-auto">
+            <svg class="w-5 h-5 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+            <span class="hidden sm:inline">Sampah</span>
+            <span class="sm:hidden ml-1">Sampah</span>
         </a>
-        <a href="{{ route('barang.create') }}" class="inline-flex items-center justify-center py-2.5 px-5 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-all duration-200">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-            Tambah Barang
+        <a href="{{ route('barang.create') }}" class="col-span-1 inline-flex items-center justify-center py-2.5 px-3 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-all duration-200 w-full sm:w-auto">
+            <svg class="w-5 h-5 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+            <span class="hidden sm:inline">Tambah Barang</span>
+            <span class="sm:hidden ml-1">Tambah</span>
         </a>
         <button id="btnBatchLabel" type="button" onclick="submitBatchLabel()" disabled
-            class="inline-flex items-center justify-center py-2.5 px-5 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-purple-600 hover:bg-purple-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 w-full sm:w-auto">
-           <span class="ml-2">Cetak Label Terpilih (<span id="selectedCount">0</span>)</span>
+            class="col-span-2 inline-flex items-center justify-center py-2.5 px-5 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-purple-600 hover:bg-purple-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 w-full sm:w-auto">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
+            Cetak Label (<span id="selectedCount" class="ml-1">0</span>)
         </button>
     </div>
 </div>
@@ -82,12 +85,12 @@
                     <th scope="col" class="px-4 py-4 w-10">
                         <input type="checkbox" id="checkAll" class="rounded text-blue-600 cursor-pointer w-4 h-4">
                     </th>
-                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Kode</th>
+                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider hidden sm:table-cell">Kode</th>
                     <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Barang</th>
-                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Lokasi</th>
-                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Kondisi</th>
-                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Jumlah</th>
-                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Supplier/Sumber</th>
+                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider hidden md:table-cell">Lokasi</th>
+                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider hidden sm:table-cell">Kondisi</th>
+                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider hidden sm:table-cell">Jumlah</th>
+                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider hidden lg:table-cell">Supplier/Sumber</th>
                     <th scope="col" class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider w-32">Aksi</th>
                 </tr>
             </thead>
@@ -97,7 +100,7 @@
                     <td class="px-4 py-4">
                         <input type="checkbox" name="label_ids[]" value="{{ $item->id_barang }}" class="item-check rounded text-blue-600 cursor-pointer w-4 h-4" onchange="updateCount()">
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-blue-700">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-blue-700 hidden sm:table-cell">
                         {{ $item->kode_inventaris }}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
@@ -110,33 +113,48 @@
                                     </div>
                                 </div>
                             @else
-                                <div class="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center mr-3 border border-gray-200 text-gray-400 text-xs font-medium">No Pic</div>
+                                <div class="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center mr-3 border border-gray-200 text-gray-400 text-xs font-medium shadow-inner">No Pic</div>
                             @endif
                             <div>
-                                <div class="text-sm font-bold text-gray-900">{{ $item->nama_barang }}</div>
+                                <div class="text-sm font-bold text-blue-700 sm:hidden">{{ $item->kode_inventaris }}</div>
+                                <div class="text-sm font-bold text-gray-900 leading-tight">{{ $item->nama_barang }}</div>
                                 <div class="text-xs text-gray-500 mt-0.5">{{ $item->merk_type }} • {{ $item->kategori->nama_kategori ?? '-' }}</div>
+                                <div class="text-xs text-blue-600 font-medium md:hidden mt-0.5">📍 {{ $item->lokasi->nama_ruangan ?? '-' }}</div>
+                                <div class="flex items-center gap-2 mt-1 sm:hidden">
+                                    @if($item->kondisi == 'Baik')
+                                        <span class="px-2 py-0.5 inline-flex text-[10px] font-semibold rounded bg-green-100 text-green-800 border border-green-200">Baik</span>
+                                    @elseif($item->kondisi == 'Rusak Ringan')
+                                        <span class="px-2 py-0.5 inline-flex text-[10px] font-semibold rounded bg-yellow-100 text-yellow-800 border border-yellow-200">Rusak Ringan</span>
+                                    @else
+                                        <span class="px-2 py-0.5 inline-flex text-[10px] font-semibold rounded bg-red-100 text-red-800 border border-red-200">Rusak Berat</span>
+                                    @endif
+                                    <span class="text-xs font-bold text-gray-700">{{ $item->jumlah_barang }} Unit</span>
+                                </div>
                             </div>
                         </div>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                        {{ $item->lokasi->nama_ruangan ?? '-' }}
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 hidden md:table-cell">
+                        <div class="flex items-center">
+                            <svg class="w-4 h-4 mr-1.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            {{ $item->lokasi->nama_ruangan ?? '-' }}
+                        </div>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
+                    <td class="px-6 py-4 whitespace-nowrap hidden sm:table-cell">
                         @if($item->kondisi == 'Baik')
-                            <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 border border-green-200">Baik</span>
+                            <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 border border-green-200 shadow-sm">Baik</span>
                         @elseif($item->kondisi == 'Rusak Ringan')
-                            <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 border border-yellow-200">Rusak Ringan</span>
+                            <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 border border-yellow-200 shadow-sm">Rusak Ringan</span>
                         @else
-                            <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 border border-red-200">Rusak Berat</span>
+                            <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 border border-red-200 shadow-sm">Rusak Berat</span>
                         @endif
                         
                         @if($item->status_approval == 'Dalam Perbaikan')
                             <div class="mt-1.5">
-                                <span class="px-2 py-0.5 inline-flex text-[10px] font-bold rounded bg-blue-100 text-blue-800 border border-blue-200" title="Barang ini sedang dalam perbaikan (Maintenance)">🛠️ Diservis</span>
+                                <span class="px-2 py-0.5 inline-flex text-[10px] font-bold rounded-md bg-blue-100 text-blue-800 border border-blue-200 shadow-sm" title="Barang ini sedang dalam perbaikan (Maintenance)">🛠️ Diservis</span>
                             </div>
                         @endif
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-bold">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 hidden sm:table-cell">
                         @if($item->jumlah_diajukan && $item->jumlah_diajukan != $item->jumlah_barang)
                             <div class="text-xs text-gray-400 line-through font-normal" title="Jumlah awal diajukan">{{ $item->jumlah_diajukan }} Unit</div>
                             <div class="text-green-600" title="Jumlah disetujui/tersedia">{{ $item->jumlah_barang }} Unit</div>
@@ -144,12 +162,12 @@
                             {{ $item->jumlah_barang }} Unit
                         @endif
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 hidden lg:table-cell">
                         <div class="font-medium text-gray-900">{{ $item->supplier->nama_supplier ?? '-' }}</div>
                         <div class="text-xs text-gray-500">{{ $item->sumberDana->nama_sumber_dana ?? '-' }} ({{ $item->tahun_perolehan }})</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <div class="flex items-center justify-end space-x-3">
+                        <div class="flex items-center justify-end gap-2">
                             <button type="button" 
                                 data-detail="{{ json_encode([
                                     'kode' => $item->kode_inventaris,
@@ -165,23 +183,30 @@
                                     'nota' => $item->bukti_nota ? asset('storage/' . $item->bukti_nota) : null
                                 ]) }}"
                                 onclick="openPreviewDetail(this)"
-                                class="text-blue-600 hover:text-blue-900 font-bold flex items-center">
-                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                                Detail
+                                class="p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors" title="Lihat Detail">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                             </button>
 
                             @if($item->status_approval == 'Dalam Perbaikan')
-                                <span class="text-gray-400 text-[10px] font-semibold italic">Edit dinonaktifkan</span>
+                                <span class="text-gray-400 text-xs font-semibold italic bg-gray-100 px-2 py-1 rounded">Disabled</span>
                             @else
-                                <a href="{{ route('barang.edit', $item->id_barang) }}" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                                <a href="{{ route('barang.label', $item->id_barang) }}" target="_blank" class="p-2 text-green-600 hover:text-green-700 hover:bg-green-50 rounded-lg transition-colors" title="Cetak Label QR">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
+                                </a>
                                 @if($item->kondisi !== 'Baik')
-                                    <a href="{{ route('perbaikan.create', ['id_barang' => $item->id_barang]) }}" class="text-yellow-600 hover:text-yellow-900 font-bold" title="Ajukan Perbaikan">Servis</a>
+                                    <a href="{{ route('perbaikan.create', ['id_barang' => $item->id_barang]) }}" class="p-2 text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50 rounded-lg transition-colors" title="Ajukan Perbaikan (Servis)">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                    </a>
                                 @endif
-                                <a href="{{ route('barang.label', $item->id_barang) }}" target="_blank" class="text-green-600 hover:text-green-900">Label</a>
-                                <form action="{{ route('barang.destroy', $item->id_barang) }}" method="POST" onsubmit="return confirm('Yakin ingin membuang barang ini ke recycle bin?');">
+                                <a href="{{ route('barang.edit', $item->id_barang) }}" class="p-2 text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 rounded-lg transition-colors" title="Edit Data">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                                </a>
+                                <form action="{{ route('barang.destroy', $item->id_barang) }}" method="POST" onsubmit="return confirm('Yakin ingin membuang barang ini ke recycle bin?');" class="inline-block">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-900">Hapus</button>
+                                    <button type="submit" class="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors" title="Hapus Barang">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                    </button>
                                 </form>
                             @endif
                         </div>
@@ -198,6 +223,9 @@
                 @endforelse
             </tbody>
         </table>
+    </div>
+    <div class="p-4 border-t border-gray-100">
+        {{ $barang->withQueryString()->links() }}
     </div>
 </div>
 

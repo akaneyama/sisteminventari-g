@@ -42,9 +42,9 @@
             <thead class="bg-gray-50">
                 <tr>
                     <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Data Barang</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Detail</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider hidden sm:table-cell">Detail</th>
                     <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
-                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider w-1/3">Keterangan</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider hidden lg:table-cell w-1/3">Keterangan</th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-100">
@@ -54,8 +54,43 @@
                         <div class="text-sm font-bold text-blue-700">{{ $item->kode_inventaris }}</div>
                         <div class="text-sm text-gray-900">{{ $item->nama_barang }}</div>
                         <div class="text-xs text-gray-500 mt-0.5">{{ $item->merk_type }} &bull; Diajukan: {{ $item->jumlah_diajukan ?? $item->jumlah_barang }} Unit</div>
+                        <div class="text-xs text-gray-500 mt-1 sm:hidden">
+                            Sumber: <span class="font-medium">{{ $item->sumberDana->nama_sumber_dana ?? '-' }}</span><br>
+                            Lokasi: <span class="font-medium">{{ $item->lokasi->nama_ruangan ?? '-' }}</span>
+                        </div>
+                        
+                        <div class="mt-2 lg:hidden">
+                            @if($item->status_approval === 'Pengadaan Ditolak')
+                                <div class="bg-red-50 text-red-700 p-3 rounded-xl border border-red-100 shadow-sm inline-block w-full">
+                                    <p class="font-bold text-xs mb-1">Alasan Penolakan:</p>
+                                    <p class="text-xs">{{ $item->alasan_penolakan ?? 'Tidak ada alasan yang diberikan' }}</p>
+                                </div>
+                            @elseif($item->status_approval === 'Tersedia' || $item->status_approval === 'Dalam Perbaikan')
+                                <div class="bg-blue-50 text-blue-700 p-3 rounded-xl border border-blue-100 shadow-sm inline-block w-full">
+                                    <p class="font-bold text-xs mb-1">Pengadaan Selesai</p>
+                                    <p class="text-xs">Barang sudah diterima dan tercatat di Data Barang Inventaris.</p>
+                                </div>
+                            @elseif($item->status_approval === 'Pengadaan Disetujui')
+                                <div class="bg-green-50 text-green-700 p-3 rounded-xl border border-green-100 shadow-sm flex flex-col items-start gap-2 w-full">
+                                    <div>
+                                        <p class="font-bold text-xs mb-1">Proses Pembelian</p>
+                                        <p class="text-xs opacity-90">Barang dalam proses dibeli/dikirim.</p>
+                                    </div>
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <a href="{{ route('admin.pengajuan.cetak_po', $item->id_barang) }}" target="_blank" class="inline-flex items-center px-3 py-1.5 bg-gray-600 text-white hover:bg-gray-700 rounded-lg text-xs font-bold transition-colors shadow-sm">
+                                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                                            Cetak PO
+                                        </a>
+                                        <button type="button" onclick="bukaModalTerima({{ $item->id_barang }}, '{{ $item->nama_barang }}')" class="inline-flex items-center px-3 py-1.5 bg-green-600 text-white hover:bg-green-700 rounded-lg text-xs font-bold transition-colors shadow-sm">
+                                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                            Diterima
+                                        </button>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
                     </td>
-                    <td class="px-6 py-4 text-sm text-gray-700">
+                    <td class="px-6 py-4 text-sm text-gray-700 hidden sm:table-cell">
                         Sumber: <span class="font-medium">{{ $item->sumberDana->nama_sumber_dana ?? '-' }}</span><br>
                         Lokasi: <span class="font-medium">{{ $item->lokasi->nama_ruangan ?? '-' }}</span>
                     </td>
@@ -70,7 +105,7 @@
                             <span class="px-2.5 py-1 inline-flex text-xs font-semibold rounded-full bg-blue-100 text-blue-800 border border-blue-200">Selesai / Menjadi Aset</span>
                         @endif
                     </td>
-                    <td class="px-6 py-4 text-sm text-gray-600">
+                    <td class="px-6 py-4 text-sm text-gray-600 hidden lg:table-cell">
                         @if($item->status_approval === 'Pengadaan Ditolak')
                             <div class="bg-red-50 text-red-700 p-3 rounded-xl border border-red-100 shadow-sm inline-block w-full">
                                 <p class="font-bold text-xs mb-1">Alasan Penolakan:</p>
@@ -114,6 +149,9 @@
                 @endforelse
             </tbody>
         </table>
+    </div>
+    <div class="p-4 border-t border-gray-100">
+        {{ $pengajuans->withQueryString()->links() }}
     </div>
 </div>
 

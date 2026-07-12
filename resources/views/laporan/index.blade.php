@@ -199,6 +199,9 @@
             @endif
         </table>
     </div>
+    <div class="p-4 border-t border-gray-100">
+        {{ $barang->withQueryString()->links() }}
+    </div>
 </div>
 
 @if(auth()->user()->role === 'Kepsek')

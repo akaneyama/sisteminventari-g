@@ -15,7 +15,7 @@ class PerbaikanService
             $query->where('status_perbaikan', $filter['status']);
         }
 
-        return $query->latest()->get();
+        return $query->latest()->paginate(10);
     }
 
     public function mulaiPerbaikan($id_barang, array $data)

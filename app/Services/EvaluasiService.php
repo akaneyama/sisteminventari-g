@@ -23,7 +23,7 @@ class EvaluasiService
             $query->where('status', $filter['status']);
         }
 
-        return $query->latest()->get();
+        return $query->latest()->paginate(10);
     }
 
     public function create(array $data)

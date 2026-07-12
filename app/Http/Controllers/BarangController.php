@@ -113,7 +113,7 @@ class BarangController extends Controller
         $barang = \App\Models\Barang::onlyTrashed()
             ->with(['kategori', 'lokasi', 'sumberDana', 'supplier'])
             ->latest('deleted_at')
-            ->get();
+            ->paginate(10);
             
         return view('admin.barang.trash', compact('barang'));
     }

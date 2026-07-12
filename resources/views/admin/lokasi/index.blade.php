@@ -47,7 +47,7 @@
                 <tr>
                     <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider w-16">No</th>
                     <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Nama Ruangan</th>
-                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Gedung / Lantai</th>
+                    <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider hidden sm:table-cell">Gedung / Lantai</th>
                     <th scope="col" class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider w-32">Aksi</th>
                 </tr>
             </thead>
@@ -57,10 +57,11 @@
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-medium">
                         {{ $loop->iteration }}
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
-                        {{ $item->nama_ruangan }}
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-bold text-gray-900">{{ $item->nama_ruangan }}</div>
+                        <div class="text-xs text-gray-500 sm:hidden mt-0.5">Gedung: {{ $item->gedung }}</div>
                     </td>
-                    <td class="px-6 py-4 text-sm text-gray-600 whitespace-nowrap">
+                    <td class="px-6 py-4 text-sm text-gray-600 whitespace-nowrap hidden sm:table-cell">
                         {{ $item->gedung }}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -89,6 +90,9 @@
                 @endforelse
             </tbody>
         </table>
+    </div>
+    <div class="p-4 border-t border-gray-100">
+        {{ $lokasi->withQueryString()->links() }}
     </div>
 </div>
 @endsection

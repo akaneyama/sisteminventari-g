@@ -16,15 +16,18 @@ class MutasiService
         if (!empty($filter['search'])) {
             $s = $filter['search'];
             $query->whereHas('barang', function($q) use ($s) {
-                $q->where('kode_inventaris', 'like', "%{$s}%")
-                  ->orWhere('nama_barang', 'like', "%{$s}%");
+                $q->withTrashed()
+                  ->where(function($q2) use ($s) {
+                      $q2->where('kode_inventaris', 'like', "%{$s}%")
+                         ->orWhere('nama_barang', 'like', "%{$s}%");
+                  });
             });
         }
         if (!empty($filter['jenis_mutasi']))  $query->where('jenis_mutasi', $filter['jenis_mutasi']);
         if (!empty($filter['tanggal_dari']))  $query->whereDate('tanggal_mutasi', '>=', $filter['tanggal_dari']);
         if (!empty($filter['tanggal_sampai'])) $query->whereDate('tanggal_mutasi', '<=', $filter['tanggal_sampai']);
 
-        return $query->orderBy('tanggal_mutasi', 'desc')->latest()->get();
+        return $query->orderBy('tanggal_mutasi', 'desc')->latest()->paginate(10);
     }
 
     public function create(array $data)
@@ -54,7 +57,7 @@ class MutasiService
         return Mutasi::with(['barang', 'user', 'lokasiAsal', 'lokasiTujuan'])
             ->where('status', 'Menunggu')
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(10);
     }
 
     public function approveMutasi($id)
@@ -74,7 +77,7 @@ class MutasiService
 
                 $targetBarang = $barang->replicate();
                 $targetBarang->jumlah_barang = $mutasi->jumlah;
-                $targetBarang->kode_inventaris = $barang->kode_inventaris . '-SPLIT-' . time();
+                $targetBarang->kode_inventaris = $barang->kode_inventaris . '-MUT-' . time();
                 $targetBarang->save();
             } else {
                 $targetBarang = $barang;

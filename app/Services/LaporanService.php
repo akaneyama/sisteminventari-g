@@ -39,14 +39,15 @@ class LaporanService
         return $query; // Returning query builder so caller can append ->latest()->get() or ->get()
     }
     
-    public function getStats($barangCollection)
+    public function getStats($queryBuilder)
     {
+        // Clone query agar tidak merubah query asli
         return [
-            'total_jenis'   => $barangCollection->count(),
-            'total_unit'    => $barangCollection->sum('jumlah_barang'),
-            'kondisi_baik'  => $barangCollection->where('kondisi', 'Baik')->sum('jumlah_barang'),
-            'rusak_ringan'  => $barangCollection->where('kondisi', 'Rusak Ringan')->sum('jumlah_barang'),
-            'rusak_berat'   => $barangCollection->where('kondisi', 'Rusak Berat')->sum('jumlah_barang'),
+            'total_jenis'   => (clone $queryBuilder)->count(),
+            'total_unit'    => (clone $queryBuilder)->sum('jumlah_barang'),
+            'kondisi_baik'  => (clone $queryBuilder)->where('kondisi', 'Baik')->sum('jumlah_barang'),
+            'rusak_ringan'  => (clone $queryBuilder)->where('kondisi', 'Rusak Ringan')->sum('jumlah_barang'),
+            'rusak_berat'   => (clone $queryBuilder)->where('kondisi', 'Rusak Berat')->sum('jumlah_barang'),
         ];
     }
 }
