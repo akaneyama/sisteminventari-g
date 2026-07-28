@@ -63,6 +63,7 @@ class MutasiController extends Controller
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.mutasi.bast_pdf', compact('mutasi', 'identitas'));
         $pdf->setPaper('A4', 'portrait');
         
-        return $pdf->stream('BAST_Mutasi_' . ($mutasi->barang->kode_inventaris ?? 'Barang') . '.pdf');
+        $safeKode = str_replace(['/', '\\'], '-', $mutasi->barang->kode_inventaris ?? 'Barang');
+        return $pdf->stream('BAST_Mutasi_' . $safeKode . '.pdf');
     }
 }

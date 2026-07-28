@@ -79,6 +79,7 @@ class PerbaikanController extends Controller
         $pdf = Pdf::loadView('admin.perbaikan.cetak_pdf', compact('perbaikan', 'identitas'))
                   ->setPaper('A4', 'portrait');
 
-        return $pdf->stream('Surat_Bukti_Perbaikan_Barang_' . $perbaikan->barang->kode_inventaris . '.pdf');
+        $safeKode = str_replace(['/', '\\'], '-', $perbaikan->barang->kode_inventaris);
+        return $pdf->stream('Surat_Bukti_Perbaikan_Barang_' . $safeKode . '.pdf');
     }
 }

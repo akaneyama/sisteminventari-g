@@ -43,6 +43,7 @@ class PengajuanController extends Controller
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.pengajuan.surat_po_pdf', compact('barang', 'identitas'));
         $pdf->setPaper('A4', 'portrait');
         
-        return $pdf->stream('Surat_Pesanan_PO_' . $barang->kode_inventaris . '.pdf');
+        $safeKode = str_replace(['/', '\\'], '-', $barang->kode_inventaris);
+        return $pdf->stream('Surat_Pesanan_PO_' . $safeKode . '.pdf');
     }
 }
