@@ -100,7 +100,7 @@ class DashboardController extends Controller
         $counts = [
             'barang' => \App\Models\Barang::where('kondisi', 'Rusak Berat')->where('status_approval', 'Tersedia')->count(),
             'pengajuan' => \App\Models\Barang::where('status_approval', 'Pengadaan Disetujui')->count(),
-            'perbaikan' => \App\Models\Perbaikan::where('status', 'Proses')->count(),
+            'perbaikan' => \App\Models\Perbaikan::where('status_perbaikan', 'Proses')->count(),
             'mutasi' => \App\Models\Mutasi::where('status', 'Ditolak')->count(), // Info mutasi yang ditolak
         ];
         

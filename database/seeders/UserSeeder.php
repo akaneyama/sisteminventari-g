@@ -20,6 +20,7 @@ class UserSeeder extends Seeder
             'email'        => 'admin@sekolah.com', //username
             'password'     => 'password123', //password 
             'role'         => 'Admin',
+            'nip'          => '1234567890',
         ]);
 
         // Akun Kepala Sekolah
@@ -29,6 +30,7 @@ class UserSeeder extends Seeder
             'email'        => 'kepsek@sekolah.com',
             'password'     => 'password123',
             'role'         => 'Kepsek',
+            'nip'          => '1234567890',
         ]);
     }
 }
