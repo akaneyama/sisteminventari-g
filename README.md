@@ -1,59 +1,133 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sistem Inventaris Barang Sekolah
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistem Inventaris Barang Sekolah adalah sebuah aplikasi berbasis web yang dibangun menggunakan **Laravel**. Aplikasi ini dirancang secara komprehensif untuk memudahkan manajemen, pencatatan, mutasi, perbaikan, serta pelaporan aset di lingkungan sekolah. Sistem ini mendukung alur kerja persetujuan (approval) berjenjang dan dilengkapi dengan berbagai fitur otomatisasi dokumen seperti cetak label QR Code, Berita Acara (BAST), dan ekspor laporan.
 
-## About Laravel
+## 🚀 Fitur Utama
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Sistem ini memiliki dua hak akses utama: **Admin** dan **Kepala Sekolah (Kepsek)**, dengan pembagian fitur sebagai berikut:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 1. Manajemen Hak Akses (Multi-Role)
+- **Admin**: Memiliki akses penuh untuk mengelola master data, transaksi barang, pengajuan pengadaan, perbaikan, dan mencetak laporan.
+- **Kepala Sekolah**: Memiliki hak untuk menyetujui (approve/reject) berbagai pengajuan serta memantau data barang dan mutasi secara *read-only*.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 2. Master Data Management (Admin)
+- Manajemen Kategori Barang & Lokasi.
+- Manajemen Sumber Dana & Supplier.
+- Manajemen Identitas Sekolah.
+- Manajemen Pengguna (*User Management*) dengan fitur *Trash* dan *Restore*.
 
-## Learning Laravel
+### 3. Manajemen Aset & Barang
+- Pendataan barang secara detail dan terstruktur.
+- Fitur *Soft Delete (Trash & Restore)* untuk mencegah kehilangan data secara tidak sengaja.
+- **Cetak Label QR Code**: Mendukung pencetakan label satuan maupun massal (*batch*) untuk mempermudah identifikasi barang secara fisik.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### 4. Transaksi & Mutasi Barang
+- Pencatatan riwayat perpindahan/mutasi barang antar lokasi atau penanggung jawab.
+- **Cetak BAST**: Otomatisasi cetak Berita Acara Serah Terima (BAST) setiap kali terjadi mutasi barang.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 5. Manajemen Perbaikan (Maintenance)
+- Pencatatan riwayat perbaikan aset/barang yang rusak.
+- Pencetakan dokumen perbaikan dalam format PDF.
 
-## Laravel Sponsors
+### 6. Pengajuan Pengadaan Barang
+- Alur pengajuan pengadaan barang baru yang sistematis.
+- **Cetak PO**: Pencetakan Purchase Order (PO) secara otomatis setelah pengajuan disetujui.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 7. Sistem Persetujuan Berjenjang (Approval - Kepsek)
+Kepala Sekolah menerima notifikasi *real-time* (polling) dan dapat memberikan persetujuan untuk:
+- Penghapusan Aset
+- Pengajuan Pengadaan Barang Baru
+- Perubahan Data Barang
+- Mutasi Barang
 
-### Premium Partners
+### 8. Laporan & Evaluasi
+- Pembuatan laporan aset dan evaluasi inventaris.
+- Ekspor laporan ke berbagai format (Excel & PDF) untuk kebutuhan audit dan dokumentasi.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## 🛠️ Teknologi yang Digunakan
+- **Framework:** Laravel (PHP ^8.2)
+- **Database:** MySQL / MariaDB
+- **PDF Generator:** `barryvdh/laravel-dompdf`
+- **Export/Import Excel:** `maatwebsite/excel`
+- **QR Code Generator:** `simplesoftwareio/simple-qrcode`
 
-## Contributing
+## 📋 Panduan Penggunaan (Instalasi Lokal)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Untuk menjalankan aplikasi ini di *environment* lokal (komputer Anda), ikuti langkah-langkah berikut:
 
-## Code of Conduct
+### Prasyarat Sistem
+- **PHP** >= 8.2
+- **Composer** (Dependency Manager untuk PHP)
+- **Node.js & NPM** (Untuk kompilasi aset frontend)
+- **Database Server** (MySQL/MariaDB/XAMPP/Laragon)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Langkah Instalasi
+1. **Clone Repository**
+   Buka terminal atau command prompt, lalu jalankan:
+   ```bash
+   git clone <url-repo-anda>
+   cd sisteminventari-g
+   ```
 
-## Security Vulnerabilities
+2. **Install Dependensi PHP**
+   ```bash
+   composer install
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+3. **Konfigurasi Environment**
+   Duplikat file `.env.example` menjadi `.env`:
+   ```bash
+   cp .env.example .env
+   # Pengguna Windows Command Prompt bisa menggunakan: copy .env.example .env
+   ```
+   Buka file `.env` di teks editor pilihan Anda dan sesuaikan konfigurasi database:
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=nama_database_anda
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
 
-## License
+4. **Generate Application Key**
+   ```bash
+   php artisan key:generate
+   ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+5. **Migrasi dan Seeding Database**
+   Untuk membuat tabel database beserta data awal (dummy/admin), jalankan:
+   ```bash
+   php artisan migrate --seed
+   ```
+
+6. **Install Dependensi Frontend & Build**
+   ```bash
+   npm install
+   npm run build
+   ```
+
+7. **Symlink Storage (Penting)**
+   Agar file upload, gambar, atau dokumen bisa diakses oleh publik, jalankan:
+   ```bash
+   php artisan storage:link
+   ```
+
+8. **Jalankan Aplikasi**
+   Jalankan server lokal Laravel:
+   ```bash
+   php artisan serve
+   ```
+   Aplikasi kini dapat diakses melalui browser pada alamat: `http://localhost:8000`.
+
+## 🔒 Informasi Login (Default Seeder)
+Jika Anda menjalankan perintah `--seed` pada langkah instalasi, Anda dapat masuk menggunakan akun default berikut (harap cek seeder Anda untuk memastikan email/password):
+- **Role Admin**
+  - Email: `admin@admin.com` (contoh)
+  - Password: `password`
+- **Role Kepala Sekolah**
+  - Email: `kepsek@kepsek.com` (contoh)
+  - Password: `password`
+
+## 📝 Lisensi
+Sistem aplikasi ini merupakan perangkat lunak *open-source* yang dilisensikan di bawah [MIT license](https://opensource.org/licenses/MIT).
