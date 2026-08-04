@@ -11,9 +11,9 @@
 
     <div id="sidebarBackdrop" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-20 hidden transition-opacity lg:hidden"></div>
 
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-30 w-64 bg-white border-r border-gray-100 transform -translate-x-full transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:flex lg:flex-col justify-between h-full shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-30 w-64 bg-white border-r border-gray-100 transform -translate-x-full transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static flex flex-col justify-between h-full shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
         
-        <div class="overflow-y-auto h-full flex flex-col">
+        <div class="overflow-y-auto flex-1 flex flex-col">
             <div class="h-20 flex items-center px-6 border-b border-gray-100">
                 <div class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-blue-100 text-blue-600 mr-3">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
