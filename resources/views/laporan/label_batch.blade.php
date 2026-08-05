@@ -172,7 +172,15 @@
 
                 <div class="label-qr">
                     <div class="qr-box">
-                        {!! QrCode::size(75)->generate($barang->kode_inventaris) !!}
+                        @php
+                            $qrData = "Kode: " . $barang->kode_inventaris . "\n" .
+                                      "Nama: " . $barang->nama_barang . "\n" .
+                                      "Merk: " . ($barang->merk_type ?: '-') . "\n" .
+                                      "Kategori: " . ($barang->kategori->nama_kategori ?? '-') . "\n" .
+                                      "Lokasi: " . ($barang->lokasi->nama_ruangan ?? '-') . "\n" .
+                                      "Kondisi: " . $barang->kondisi;
+                        @endphp
+                        {!! QrCode::size(75)->generate($qrData) !!}
                     </div>
                     <span class="scan-text">Scan QR</span>
                 </div>
