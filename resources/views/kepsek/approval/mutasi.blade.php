@@ -7,11 +7,7 @@
     <p class="text-sm text-gray-500 mt-1">Tinjau pengajuan perpindahan atau perubahan kondisi barang dari Admin.</p>
 </div>
 
-@if(session('success'))
-    <div class="mb-6 p-4 bg-green-50 border-l-4 border-green-500 text-green-700 rounded-xl shadow-sm text-sm font-medium">
-        {{ session('success') }}
-    </div>
-@endif
+@include('partials.alert')
 
 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
     <div class="overflow-x-auto">
@@ -38,7 +34,7 @@
                                     </div>
                                 </div>
                             @else
-                                <div class="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center mr-3 border border-gray-200 text-gray-400 text-xs font-medium">No Pic</div>
+                                <div class="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center mr-3 border border-gray-200 text-gray-400 text-xs font-medium">Tanpa Foto</div>
                             @endif
                             <div>
                                 <div class="text-sm font-bold text-blue-700">{{ $mutasi->barang->kode_inventaris ?? '-' }}</div>
@@ -137,12 +133,12 @@
 
 <script>
 function bukaModalTolakMutasi(id, nama) {
-    document.getElementById('modalTolakMutasi').classList.remove('hidden');
+    openModal(document.getElementById('modalTolakMutasi'));
     document.getElementById('namaBarangTolakMutasi').innerText = nama;
     document.getElementById('formTolakMutasi').action = `/kepsek/approval/mutasi/${id}/reject`;
 }
 function tutupModalTolakMutasi() {
-    document.getElementById('modalTolakMutasi').classList.add('hidden');
+    closeModal(document.getElementById('modalTolakMutasi'));
 }
 </script>
 @endsection

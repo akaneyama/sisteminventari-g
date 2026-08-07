@@ -7,11 +7,7 @@
     <p class="text-sm text-gray-500 mt-1">Tinjau perubahan data barang yang diajukan oleh Admin.</p>
 </div>
 
-@if(session('success'))
-    <div class="mb-6 p-4 bg-green-50 border-l-4 border-green-500 text-green-700 rounded-xl shadow-sm text-sm font-medium">
-        {{ session('success') }}
-    </div>
-@endif
+@include('partials.alert')
 
 <div class="space-y-5">
     @forelse($perubahans as $item)
@@ -40,7 +36,7 @@
                         </div>
                     </div>
                 @else
-                    <div class="h-12 w-12 rounded-lg bg-gray-100 flex items-center justify-center mr-4 border border-gray-200 text-gray-400 text-xs font-medium">No Pic</div>
+                    <div class="h-12 w-12 rounded-lg bg-gray-100 flex items-center justify-center mr-4 border border-gray-200 text-gray-400 text-xs font-medium">Tanpa Foto</div>
                 @endif
                 <div>
                     <p class="text-xs text-gray-400 font-medium uppercase tracking-wider">Kode: {{ $barang->kode_inventaris ?? 'N/A' }}</p>
@@ -130,12 +126,12 @@
 
 <script>
 function bukaModalTolakPerubahan(id, nama) {
-    document.getElementById('modalTolakPerubahan').classList.remove('hidden');
+    openModal(document.getElementById('modalTolakPerubahan'));
     document.getElementById('namaBarangTolakPerubahan').innerText = nama;
     document.getElementById('formTolakPerubahan').action = `/kepsek/approval/perubahan/${id}/reject`;
 }
 function tutupModalTolakPerubahan() {
-    document.getElementById('modalTolakPerubahan').classList.add('hidden');
+    closeModal(document.getElementById('modalTolakPerubahan'));
 }
 </script>
 @endsection

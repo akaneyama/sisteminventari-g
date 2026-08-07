@@ -112,11 +112,11 @@
             <div class="flex flex-col sm:flex-row gap-3 w-full xl:w-auto pt-4 xl:pt-0 border-t border-gray-200 xl:border-t-0">
                 <a href="{{ route('laporan.pdf', request()->query()) }}" target="_blank" class="inline-flex items-center justify-center py-2.5 px-5 rounded-xl shadow-sm text-sm font-semibold text-white bg-red-500 hover:bg-red-600 transition-all duration-200 transform hover:-translate-y-0.5">
                     <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/></svg>
-                    Export PDF
+                    Unduh PDF
                 </a>
                 <a href="{{ route('laporan.excel', request()->query()) }}" class="inline-flex items-center justify-center py-2.5 px-5 rounded-xl shadow-sm text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition-all duration-200 transform hover:-translate-y-0.5">
                     <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
-                    Export Excel
+                    Unduh Excel
                 </a>
             </div>
         </div>
@@ -149,7 +149,7 @@
                             @if($item->foto_barang)
                                 <img class="h-10 w-10 rounded-lg object-cover mr-3 border border-gray-200" src="{{ asset('storage/' . $item->foto_barang) }}" alt="Foto">
                             @else
-                                <div class="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center mr-3 border border-gray-200 text-gray-400 text-xs font-medium">No Pic</div>
+                                <div class="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center mr-3 border border-gray-200 text-gray-400 text-xs font-medium">Tanpa Foto</div>
                             @endif
                             <div>
                                 <div class="text-sm font-semibold text-gray-900">{{ $item->nama_barang }}</div>
@@ -161,13 +161,7 @@
                     <td class="px-5 py-4 whitespace-nowrap text-sm text-gray-600">{{ $item->lokasi->nama_ruangan ?? '-' }}</td>
                     <td class="px-5 py-4 whitespace-nowrap text-sm font-bold text-gray-900">{{ $item->jumlah_barang }}</td>
                     <td class="px-5 py-4 whitespace-nowrap">
-                        @if($item->kondisi == 'Baik')
-                            <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 border border-green-200">Baik</span>
-                        @elseif($item->kondisi == 'Rusak Ringan')
-                            <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 border border-yellow-200">Rusak Ringan</span>
-                        @else
-                            <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 border border-red-200">Rusak Berat</span>
-                        @endif
+                        @include('partials.status-badge', ['status' => $item->kondisi])
                     </td>
                     <td class="px-5 py-4 whitespace-nowrap text-sm text-gray-600">{{ $item->supplier->nama_supplier ?? '-' }}</td>
                     <td class="px-5 py-4 whitespace-nowrap text-sm text-gray-600">
@@ -209,11 +203,7 @@
     <h3 class="text-lg font-bold text-gray-800 mb-2">Catatan Pimpinan / Evaluasi</h3>
     <p class="text-sm text-gray-500 mb-4">Berikan catatan atau instruksi terkait laporan inventaris ini. Catatan akan muncul di Dashboard Admin.</p>
     
-    @if(session('success'))
-        <div class="mb-4 p-4 bg-green-50 border-l-4 border-green-500 text-green-700 rounded-xl text-sm font-medium">
-            {{ session('success') }}
-        </div>
-    @endif
+    @include('partials.alert')
 
     <form action="{{ route('laporan.evaluasi.store') }}" method="POST">
         @csrf

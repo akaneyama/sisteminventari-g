@@ -26,12 +26,7 @@
     </div>
 </div>
 
-@if(session('success'))
-    <div class="mb-6 p-4 bg-green-50 border-l-4 border-green-500 text-green-700 rounded-xl shadow-sm flex items-start">
-        <svg class="w-5 h-5 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        <span class="font-medium text-sm">{{ session('success') }}</span>
-    </div>
-@endif
+@include('partials.alert')
 
 {{-- Search & Filter Bar --}}
 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-4">
@@ -77,6 +72,14 @@
     </form>
 </div>
 
+<div class="mb-3 flex flex-wrap items-center justify-end gap-x-5 gap-y-1 text-[11px] text-gray-400">
+    <span class="font-semibold text-gray-500">Legenda aksi:</span>
+    <span class="inline-flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg> Detail</span>
+    <span class="inline-flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg> Label QR</span>
+    <span class="inline-flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg> Perbaikan</span>
+    <span class="inline-flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg> Edit</span>
+</div>
+
 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
     <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-100">
@@ -113,7 +116,7 @@
                                     </div>
                                 </div>
                             @else
-                                <div class="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center mr-3 border border-gray-200 text-gray-400 text-xs font-medium shadow-inner">No Pic</div>
+                                <div class="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center mr-3 border border-gray-200 text-gray-400 text-xs font-medium shadow-inner">Tanpa Foto</div>
                             @endif
                             <div>
                                 <div class="text-sm font-bold text-blue-700 sm:hidden">{{ $item->kode_inventaris }}</div>
@@ -121,13 +124,7 @@
                                 <div class="text-xs text-gray-500 mt-0.5">{{ $item->merk_type }} • {{ $item->kategori->nama_kategori ?? '-' }}</div>
                                 <div class="text-xs text-blue-600 font-medium md:hidden mt-0.5">📍 {{ $item->lokasi->nama_ruangan ?? '-' }}</div>
                                 <div class="flex items-center gap-2 mt-1 sm:hidden">
-                                    @if($item->kondisi == 'Baik')
-                                        <span class="px-2 py-0.5 inline-flex text-[10px] font-semibold rounded bg-green-100 text-green-800 border border-green-200">Baik</span>
-                                    @elseif($item->kondisi == 'Rusak Ringan')
-                                        <span class="px-2 py-0.5 inline-flex text-[10px] font-semibold rounded bg-yellow-100 text-yellow-800 border border-yellow-200">Rusak Ringan</span>
-                                    @else
-                                        <span class="px-2 py-0.5 inline-flex text-[10px] font-semibold rounded bg-red-100 text-red-800 border border-red-200">Rusak Berat</span>
-                                    @endif
+                                    @include('partials.status-badge', ['status' => $item->kondisi, 'size' => 'sm'])
                                     <span class="text-xs font-bold text-gray-700">{{ $item->jumlah_barang }} Unit</span>
                                 </div>
                             </div>
@@ -140,13 +137,7 @@
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap hidden sm:table-cell">
-                        @if($item->kondisi == 'Baik')
-                            <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 border border-green-200 shadow-sm">Baik</span>
-                        @elseif($item->kondisi == 'Rusak Ringan')
-                            <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 border border-yellow-200 shadow-sm">Rusak Ringan</span>
-                        @else
-                            <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 border border-red-200 shadow-sm">Rusak Berat</span>
-                        @endif
+                        @include('partials.status-badge', ['status' => $item->kondisi, 'shadow' => true])
                         
                         @if($item->status_approval == 'Dalam Perbaikan')
                             <div class="mt-1.5">
@@ -183,22 +174,22 @@
                                     'nota' => $item->bukti_nota ? asset('storage/' . $item->bukti_nota) : null
                                 ]) }}"
                                 onclick="openPreviewDetail(this)"
-                                class="p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors" title="Lihat Detail">
+                                class="p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors" title="Lihat Detail" aria-label="Lihat Detail">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                             </button>
 
                             @if($item->status_approval == 'Dalam Perbaikan')
                                 <span class="text-gray-400 text-xs font-semibold italic bg-gray-100 px-2 py-1 rounded">Disabled</span>
                             @else
-                                <a href="{{ route('barang.label', $item->id_barang) }}" target="_blank" class="p-2 text-green-600 hover:text-green-700 hover:bg-green-50 rounded-lg transition-colors" title="Cetak Label QR">
+                                <a href="{{ route('barang.label', $item->id_barang) }}" target="_blank" class="p-2 text-green-600 hover:text-green-700 hover:bg-green-50 rounded-lg transition-colors" title="Cetak Label QR" aria-label="Cetak Label QR">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
                                 </a>
                                 @if($item->kondisi !== 'Baik')
-                                    <a href="{{ route('perbaikan.create', ['id_barang' => $item->id_barang]) }}" class="p-2 text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50 rounded-lg transition-colors" title="Ajukan Perbaikan (Servis)">
+                                    <a href="{{ route('perbaikan.create', ['id_barang' => $item->id_barang]) }}" class="p-2 text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50 rounded-lg transition-colors" title="Ajukan Perbaikan (Servis)" aria-label="Ajukan Perbaikan (Servis)">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                                     </a>
                                 @endif
-                                <a href="{{ route('barang.edit', $item->id_barang) }}" class="p-2 text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 rounded-lg transition-colors" title="Edit Data">
+                                <a href="{{ route('barang.edit', $item->id_barang) }}" class="p-2 text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 rounded-lg transition-colors" title="Edit Data" aria-label="Edit Data">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                                 </a>
                             @endif
@@ -349,11 +340,11 @@
             containerNota.innerHTML = `<div class="text-center"><svg class="w-10 h-10 mx-auto text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg><span class="text-gray-400 text-xs font-medium">Belum ada nota</span></div>`;
         }
         
-        document.getElementById('modalDetail').classList.remove('hidden');
+        openModal(document.getElementById('modalDetail'));
     }
 
     function closeDetailModal() {
-        document.getElementById('modalDetail').classList.add('hidden');
+        closeModal(document.getElementById('modalDetail'));
     }
 
     document.getElementById('checkAll').addEventListener('change', function() {

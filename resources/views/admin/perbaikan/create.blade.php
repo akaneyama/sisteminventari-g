@@ -15,7 +15,7 @@
         @if($barang->foto_barang)
             <img class="h-16 w-16 rounded-lg object-cover border border-gray-200" src="{{ asset('storage/' . $barang->foto_barang) }}" alt="Foto Barang">
         @else
-            <div class="h-16 w-16 rounded-lg bg-gray-200 flex items-center justify-center border border-gray-300 text-gray-400 text-xs font-medium">No Pic</div>
+            <div class="h-16 w-16 rounded-lg bg-gray-200 flex items-center justify-center border border-gray-300 text-gray-400 text-xs font-medium">Tanpa Foto</div>
         @endif
         <div>
             <h3 class="text-lg font-bold text-gray-900">{{ $barang->kode_inventaris }} - {{ $barang->nama_barang }}</h3>

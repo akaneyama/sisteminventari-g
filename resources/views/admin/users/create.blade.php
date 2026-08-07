@@ -18,15 +18,7 @@
     <form action="{{ route('users.store') }}" method="POST" class="p-6 sm:p-8">
         @csrf
         
-        @if ($errors->any())
-            <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-xl text-sm">
-                <ul class="list-disc list-inside">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+        @include('partials.alert')
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
             <div class="sm:col-span-2">
