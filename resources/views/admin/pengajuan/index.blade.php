@@ -15,11 +15,7 @@
     </div>
 </div>
 
-@if(session('success'))
-    <div class="mb-6 p-4 bg-green-50 border-l-4 border-green-500 text-green-700 rounded-xl shadow-sm text-sm font-medium">
-        {{ session('success') }}
-    </div>
-@endif
+@include('partials.alert')
 
 <div class="mb-5 flex space-x-1 p-1.5 bg-gray-100 rounded-xl w-fit border border-gray-200">
     <a href="{{ route('admin.pengajuan.index', ['tab' => 'aktif']) }}" 
@@ -188,12 +184,12 @@
 
 <script>
     function bukaModalTerima(id, nama) {
-        document.getElementById('modalTerima').classList.remove('hidden');
+        openModal(document.getElementById('modalTerima'));
         document.getElementById('namaBarangTerima').innerText = nama;
         document.getElementById('formTerima').action = `/admin/pengajuan/${id}/terima`;
     }
     function tutupModalTerima() {
-        document.getElementById('modalTerima').classList.add('hidden');
+        closeModal(document.getElementById('modalTerima'));
     }
 </script>
 @endsection

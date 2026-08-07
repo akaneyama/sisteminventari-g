@@ -95,7 +95,7 @@
                                     </div>
                                 </div>
                             @else
-                                <div class="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center mr-3 border border-gray-200 text-gray-400 text-xs font-medium shadow-inner">No Pic</div>
+                                <div class="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center mr-3 border border-gray-200 text-gray-400 text-xs font-medium shadow-inner">Tanpa Foto</div>
                             @endif
                             <div>
                                 <div class="text-sm font-bold text-blue-700 sm:hidden">{{ $item->kode_inventaris }}</div>
@@ -103,13 +103,7 @@
                                 <div class="text-xs text-gray-500 mt-0.5">{{ $item->merk_type }} • {{ $item->kategori->nama_kategori ?? '-' }}</div>
                                 <div class="text-xs text-blue-600 font-medium md:hidden mt-0.5">📍 {{ $item->lokasi->nama_ruangan ?? '-' }}</div>
                                 <div class="flex items-center gap-2 mt-1 sm:hidden">
-                                    @if($item->kondisi == 'Baik')
-                                        <span class="px-2 py-0.5 inline-flex text-[10px] font-semibold rounded bg-green-100 text-green-800 border border-green-200">Baik</span>
-                                    @elseif($item->kondisi == 'Rusak Ringan')
-                                        <span class="px-2 py-0.5 inline-flex text-[10px] font-semibold rounded bg-yellow-100 text-yellow-800 border border-yellow-200">Rusak Ringan</span>
-                                    @else
-                                        <span class="px-2 py-0.5 inline-flex text-[10px] font-semibold rounded bg-red-100 text-red-800 border border-red-200">Rusak Berat</span>
-                                    @endif
+                                    @include('partials.status-badge', ['status' => $item->kondisi, 'size' => 'sm'])
                                     <span class="text-xs font-bold text-gray-700">{{ $item->jumlah_barang }} Unit</span>
                                 </div>
                             </div>
@@ -122,13 +116,7 @@
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap hidden sm:table-cell">
-                        @if($item->kondisi == 'Baik')
-                            <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 border border-green-200 shadow-sm">Baik</span>
-                        @elseif($item->kondisi == 'Rusak Ringan')
-                            <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800 border border-yellow-200 shadow-sm">Rusak Ringan</span>
-                        @else
-                            <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800 border border-red-200 shadow-sm">Rusak Berat</span>
-                        @endif
+                        @include('partials.status-badge', ['status' => $item->kondisi, 'shadow' => true])
                         
                         @if($item->status_approval == 'Dalam Perbaikan')
                             <div class="mt-1.5">

@@ -15,14 +15,20 @@
     </div>
 </div>
 
+@if(($total_jenis ?? 0) === 0)
+    @include('partials.onboarding', ['role' => 'kepsek'])
+@endif
+
 {{-- Kartu Statistik --}}
-<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+<div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
     <div class="bg-white rounded-2xl shadow-sm border border-blue-100 p-5 flex items-center gap-4">
         <div class="p-3 bg-blue-100 rounded-xl flex-shrink-0">
             <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
         </div>
         <div>
-            <p class="text-xs text-gray-500 font-medium">Total Jenis</p>
+            <p class="text-xs text-gray-500 font-medium">Total Jenis
+                <svg class="w-3.5 h-3.5 inline text-gray-400 align-text-top" fill="none" stroke="currentColor" viewBox="0 0 24 24" title="Jumlah jenis barang yang terdaftar di inventaris"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </p>
             <p class="text-2xl font-bold text-gray-900">{{ number_format($total_jenis) }}</p>
         </div>
     </div>
@@ -31,7 +37,9 @@
             <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
         </div>
         <div>
-            <p class="text-xs text-gray-500 font-medium">Total Unit</p>
+            <p class="text-xs text-gray-500 font-medium">Total Unit
+                <svg class="w-3.5 h-3.5 inline text-gray-400 align-text-top" fill="none" stroke="currentColor" viewBox="0 0 24 24" title="Total keseluruhan unit barang (termasuk yang rusak)"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </p>
             <p class="text-2xl font-bold text-gray-900">{{ number_format($total_unit) }}</p>
         </div>
     </div>
@@ -53,12 +61,12 @@
             <p class="text-2xl font-bold text-orange-600">{{ number_format($aset_rusak_ringan) }}</p>
         </div>
     </div>
-       <div class="bg-white rounded-2xl shadow-sm border border-red-100 p-5 flex items-center gap-4">
+       <div class="bg-white rounded-2xl shadow-sm border border-orange-100 p-5 flex items-center gap-4">
         <div class="p-3 bg-red-100 rounded-xl flex-shrink-0">
             <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
         <div>
-            <p class="text-xs text-gray-500 font-medium">Kondisi Rusak</p>
+            <p class="text-xs text-gray-500 font-medium">Kondisi Rusak Berat</p>
             <p class="text-2xl font-bold text-red-600">{{ number_format($aset_rusak) }}</p>
         </div>
     </div>

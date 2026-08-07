@@ -29,11 +29,7 @@
     </a>
 </div>
 
-@if(session('success'))
-    <div class="mb-6 p-4 bg-green-50 border-l-4 border-green-500 text-green-700 rounded-xl shadow-sm text-sm font-medium">
-        {{ session('success') }}
-    </div>
-@endif
+@include('partials.alert')
 
 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
     <div class="overflow-x-auto">

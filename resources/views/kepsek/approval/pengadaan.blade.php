@@ -9,11 +9,7 @@
     </div>
 </div>
 
-@if(session('success'))
-    <div class="mb-6 p-4 bg-green-50 border-l-4 border-green-500 text-green-700 rounded-xl shadow-sm text-sm font-medium">
-        {{ session('success') }}
-    </div>
-@endif
+@include('partials.alert')
 
 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
     <div class="overflow-x-auto">
@@ -39,7 +35,7 @@
                                     </div>
                                 </div>
                             @else
-                                <div class="h-12 w-12 rounded-lg bg-gray-100 flex items-center justify-center mr-3 border border-gray-200 text-gray-400 text-xs font-medium mt-1">No Pic</div>
+                                <div class="h-12 w-12 rounded-lg bg-gray-100 flex items-center justify-center mr-3 border border-gray-200 text-gray-400 text-xs font-medium mt-1">Tanpa Foto</div>
                             @endif
                             <div>
                                 <div class="text-sm font-bold text-blue-700">{{ $item->kode_inventaris }}</div>
@@ -154,23 +150,23 @@
 
 <script>
     function bukaModalTolak(id, nama) {
-        document.getElementById('modalTolak').classList.remove('hidden');
+        openModal(document.getElementById('modalTolak'));
         document.getElementById('namaBarangTolak').innerText = nama;
         document.getElementById('formTolak').action = `/kepsek/approval/pengadaan/${id}/reject`;
     }
     function tutupModalTolak() {
-        document.getElementById('modalTolak').classList.add('hidden');
+        closeModal(document.getElementById('modalTolak'));
     }
 
     function bukaModalSetujui(id, nama, jumlah) {
-        document.getElementById('modalSetujui').classList.remove('hidden');
+        openModal(document.getElementById('modalSetujui'));
         document.getElementById('namaBarangSetujui').innerText = nama;
         document.getElementById('jumlahDisetujuiInput').value = jumlah;
         document.getElementById('jumlahDisetujuiInput').max = jumlah;
         document.getElementById('formSetujui').action = `/kepsek/approval/pengadaan/${id}/approve`;
     }
     function tutupModalSetujui() {
-        document.getElementById('modalSetujui').classList.add('hidden');
+        closeModal(document.getElementById('modalSetujui'));
     }
 </script>
 @endsection
